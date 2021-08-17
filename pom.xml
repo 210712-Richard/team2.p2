@@ -11,15 +11,12 @@
 		our coworkers that they need to manually change the target environment to 
 		1.8, we leave a pom file that will do that. -->
 	<properties>
-<<<<<<< HEAD
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-=======
 		<java.version>1.8</java.version>
   		<sonar.organization>210712-richard</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	
->>>>>>> 185a43e2725929815ba444bf1f4c6c3879e2cde5
 	</properties>
 	<dependencyManagement>
 		<dependencies>
