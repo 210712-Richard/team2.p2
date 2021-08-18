@@ -55,8 +55,6 @@ public class ItemDTO {
 		i.setCategory(this.category);
 		i.setPicture(this.picture);
 		return i;
-
-		
 	}
 
 	public UUID getId() {
