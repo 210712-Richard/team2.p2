@@ -46,7 +46,7 @@ public class ItemDTO {
 		this.picture = item.getPicture();
 	}
 	
-	public Item getItems() {
+	public Item getItem() {
 		Item i = new Item();
 		i.setId(this.id);
 		i.setName(this.name);

@@ -18,7 +18,7 @@ public class ItemServiceImpl implements ItemService {
 	
 	@Override
 	public Flux<Item> getAllItems() {
-		return itemDao.findAll().map(dto -> dto.getItems());
+		return itemDao.findAll().map(dto -> dto.getItem());
 	}
 
 }
