@@ -16,11 +16,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public User login() {
-		
+		return null;
 	}
 	
 	public User register () {
-		
+		return null;
 	}
 
 }
