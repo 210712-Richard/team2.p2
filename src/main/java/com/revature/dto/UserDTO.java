@@ -138,6 +138,13 @@ public class UserDTO {
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
 	}
+	
+	public User getUser() {
+		User u = new User(this.username, this.firstName, this.lastName, this.email, 
+				this.address, this.currency, this.userType, this.storeName );
+		u.setUserType(this.userType);
+		return u;
+	}
 
 	@Override
 	public int hashCode() {
