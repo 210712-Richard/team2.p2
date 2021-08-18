@@ -2,8 +2,8 @@ package com.revature.dto;
 
 import java.util.UUID;
 
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import com.revature.beans.Item;
@@ -11,12 +11,25 @@ import com.revature.beans.ItemType;
 
 @Table("item")
 public class ItemDTO {
-	@PrimaryKey
-	@Column
+	@PrimaryKeyColumn (
+			name="id",
+			ordinal=2,
+			type=PrimaryKeyType.CLUSTERED
+			)
 	private UUID id;
 	private String name;
+	@PrimaryKeyColumn (
+			name="storeName",
+			ordinal=1,
+			type=PrimaryKeyType.CLUSTERED
+			)
 	private String storeName;
 	private Double price;
+	@PrimaryKeyColumn (
+			name="category",
+			ordinal=0,
+			type=PrimaryKeyType.PARTITIONED
+			)
 	private ItemType category;
 	private String picture;
 	
