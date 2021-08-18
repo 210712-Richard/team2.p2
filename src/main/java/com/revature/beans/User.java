@@ -40,6 +40,18 @@ public class User implements Serializable {
 		this.wishList = wishList;
 		this.storeName = storeName;
 	}
+	
+	public User(String username, String firstName, String lastName, String email, String address, Double currency, UserType userType, String storeName) {
+		this();
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.address = address;
+		this.currency = currency;
+		this.userType = userType;
+		this.storeName = storeName;
+	}
 
 	public String getUsername() {
 		return username;

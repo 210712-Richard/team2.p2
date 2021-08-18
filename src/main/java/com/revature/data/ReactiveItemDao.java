@@ -1,5 +1,7 @@
 package com.revature.data;
 
+import java.util.UUID;
+
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +16,6 @@ import reactor.core.publisher.Mono;
 public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, String>{
 	Mono<ItemDTO> findByCategoryAndStoreNameAndId(String username);
 	Flux<ItemDTO> findByCategory(ItemType itemType);
+	Mono<ItemDTO> findByUuid(UUID id);
 
 }

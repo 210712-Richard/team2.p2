@@ -45,6 +45,19 @@ public class ItemDTO {
 		this.category = item.getCategory();
 		this.picture = item.getPicture();
 	}
+	
+	public Item getItem() {
+		Item i = new Item();
+		i.setId(this.id);
+		i.setName(this.name);
+		i.setStoreName(this.storeName);
+		i.setPrice(this.price);
+		i.setCategory(this.category);
+		i.setPicture(this.picture);
+		return i;
+
+		
+	}
 
 	public UUID getId() {
 		return id;
