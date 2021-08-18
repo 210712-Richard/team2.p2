@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 
 import com.revature.beans.Item;
 import com.revature.data.ReactiveItemDao;
@@ -20,5 +21,6 @@ public class ItemServiceImpl implements ItemService {
 	public Flux<Item> getAllItems() {
 		return itemDao.findAll().map(dto -> dto.getItem());
 	}
+
 
 }
