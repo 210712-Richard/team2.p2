@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import com.revature.beans.User;
@@ -13,8 +13,11 @@ import com.revature.beans.UserType;
 
 @Table("user")
 public class UserDTO {
-	@PrimaryKey
-	@Column
+	@PrimaryKeyColumn(
+			name="username",
+			ordinal=0,
+			type=PrimaryKeyType.PARTITIONED
+			)
 	private String username;
 	private String firstName;
 	private String lastName;
