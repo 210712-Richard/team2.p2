@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 public interface UserService {
 
-	Mono<User> login(String name);
+	Mono<User> login(String username);
 
 	User register(String username, UserType userType, String firstName, String lastName, String email, String address,
 			String storeName);
