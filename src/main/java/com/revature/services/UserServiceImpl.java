@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public Mono<User> login(String name) {
+	public Mono<User> login(String username) {
 		
-		Mono<User> userMono = userDao.findById(name).map(user -> user.getUser());
+		Mono<User> userMono = userDao.findById(username).map(user -> user.getUser());
 		
-		Mono<List<Item>> shoppingCart = Flux.from(userDao.findById(name))
+		Mono<List<Item>> shoppingCart = Flux.from(userDao.findById(username))
 				.map(user -> user.getShoppingCart())
 				.flatMap(list -> Flux.fromIterable(list))
 				.flatMap(uuid -> itemDao.findByUuid(uuid))
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
 			return u;
 		});
 		
-		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(name))
+		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
 				.map(user2 -> user2.getWishList())
 				.flatMap(list -> Flux.fromIterable(list))
 				.flatMap(uuid -> itemDao.findByUuid(uuid))
@@ -85,6 +86,13 @@ public class UserServiceImpl implements UserService {
 		}
 		userDao.save(new UserDTO(user));
 		return user;
+	}
+	
+	@Override
+	public Boolean checkAvailability(String newName) {
+		Mono<UserDTO> userOption = userDao.findByUsername(newName).defaultIfEmpty(null);
+		return userOption == null ? true : false;
+		
 	}
 
 }
