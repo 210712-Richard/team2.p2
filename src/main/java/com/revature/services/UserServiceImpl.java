@@ -30,11 +30,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public Mono<User> login(String name) {
+	public Mono<User> login(String username) {
 		
-		Mono<User> userMono = userDao.findById(name).map(user -> user.getUser());
+		Mono<User> userMono = userDao.findById(username).map(user -> user.getUser());
 		
-		Mono<List<Item>> shoppingCart = Flux.from(userDao.findById(name))
+		Mono<List<Item>> shoppingCart = Flux.from(userDao.findById(username))
 				.map(user -> user.getShoppingCart())
 				.flatMap(list -> Flux.fromIterable(list))
 				.flatMap(uuid -> itemDao.findByUuid(uuid))
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 			return u;
 		});
 		
-		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(name))
+		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
 				.map(user2 -> user2.getWishList())
 				.flatMap(list -> Flux.fromIterable(list))
 				.flatMap(uuid -> itemDao.findByUuid(uuid))

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.WebSession;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
 import com.revature.services.UserService;
+
+import reactor.core.publisher.Mono;
 
 @RestController
 public class UserController {
@@ -56,12 +59,20 @@ public class UserController {
 	LOGOUT(){
 		
 	}
-	
-	@PostMapping
-	LOGIN(){
-		
-	}
 	*/
+	@PostMapping  // ("/users")
+	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
+		
+		Mono<User> loggedUser = userService.login(u.getUsername());
+		
+		if(loggedUser == null) {
+			return ResponseEntity.notFound().build();		
+			}
+		
+		session.getAttributes().put("loggedUser", u);
+		return ResponseEntity.ok(loggedUser);
+	}
+	
 	
 	
 	
