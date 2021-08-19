@@ -14,8 +14,8 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, String>{
-	Mono<ItemDTO> findByCategoryAndStoreNameAndId(String username);
-	Flux<ItemDTO> findByCategory(ItemType itemType);
+	Mono<ItemDTO> findByCategoryAndStoreNameAndId(ItemType category, String storeName, UUID id);
+	Flux<ItemDTO> findByCategory(ItemType category);
 	Mono<ItemDTO> findByUuid(UUID id);
 
 }
