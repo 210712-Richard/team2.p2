@@ -12,4 +12,6 @@ public interface UserService {
 	User register(String username, UserType userType, String firstName, String lastName, String email, String address,
 			String storeName);
 
+	Boolean checkAvailability(String newName);
+
 }

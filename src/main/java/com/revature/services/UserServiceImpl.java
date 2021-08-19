@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,6 +86,13 @@ public class UserServiceImpl implements UserService {
 		}
 		userDao.save(new UserDTO(user));
 		return user;
+	}
+	
+	@Override
+	public Boolean checkAvailability(String newName) {
+		Mono<UserDTO> userOption = userDao.findByUsername(newName).defaultIfEmpty(null);
+		return userOption == null ? true : false;
+		
 	}
 
 }
