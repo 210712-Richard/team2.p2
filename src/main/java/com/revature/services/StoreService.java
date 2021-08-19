@@ -8,4 +8,6 @@ import reactor.core.publisher.Flux;
 
 public interface StoreService {
 	Flux<Item> listItems(String storeName);
+
+	Item createItem(Item item);
 }

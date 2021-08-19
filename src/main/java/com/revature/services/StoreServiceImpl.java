@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 
 import com.revature.beans.Item;
 import com.revature.data.ReactiveItemDao;
+import com.revature.dto.ItemDTO;
 
 @Service
 public class StoreServiceImpl implements StoreService{
@@ -25,10 +26,14 @@ public class StoreServiceImpl implements StoreService{
 		this.itemDao = itemDao;
 	}
 	
-	
 	@Override
 	public Flux<Item> listItems(String storeName) {
 		return itemDao.findByStoreName(storeName).map(dto -> dto.getItem());
 	}
 
+	@Override
+	public Item createItem(Item item) {
+		itemDao.save(new ItemDTO(item));
+		return item;
+	}
 }
