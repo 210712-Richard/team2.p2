@@ -27,8 +27,8 @@ public class StoreServiceImpl implements StoreService{
 	
 	
 	@Override
-	public Flux<Item> listItems() {
-		return itemDao.findAll().map(dto -> dto.getItem());
+	public Flux<Item> listItems(String storeName) {
+		return itemDao.findByStoreName(storeName).map(dto -> dto.getItem());
 	}
 
 }

@@ -21,14 +21,14 @@ public class ItemDTO {
 	@PrimaryKeyColumn (
 			name="storeName",
 			ordinal=1,
-			type=PrimaryKeyType.CLUSTERED
+			type=PrimaryKeyType.PARTITIONED
 			)
 	private String storeName;
 	private Double price;
 	@PrimaryKeyColumn (
 			name="category",
 			ordinal=0,
-			type=PrimaryKeyType.PARTITIONED
+			type=PrimaryKeyType.CLUSTERED
 			)
 	private ItemType category;
 	private String picture;

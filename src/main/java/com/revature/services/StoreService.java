@@ -7,5 +7,5 @@ import com.revature.beans.Item;
 import reactor.core.publisher.Flux;
 
 public interface StoreService {
-	Flux<Item> listItems();
+	Flux<Item> listItems(String storeName);
 }

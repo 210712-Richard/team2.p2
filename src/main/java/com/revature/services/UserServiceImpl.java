@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService {
 		this.userDao = userDao;
 	}
 	
+	@Override
 	public Mono<User> login(String name) {
 		
 		Mono<User> userMono = userDao.findById(name).map(user -> user.getUser());
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
 		return returnUser;
 	}
 	
+	@Override
 	public User register (String username, UserType userType, String firstName, String lastName, 
 			String email, String address, String storeName) {
 		

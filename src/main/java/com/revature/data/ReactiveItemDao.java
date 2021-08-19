@@ -17,5 +17,6 @@ public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, St
 	Mono<ItemDTO> findByCategoryAndStoreNameAndId(ItemType category, String storeName, UUID id);
 	Flux<ItemDTO> findByCategory(ItemType category);
 	Mono<ItemDTO> findByUuid(UUID id);
+	Flux<ItemDTO> findByStoreName(String storeName);
 
 }
