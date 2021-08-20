@@ -13,21 +13,21 @@ import com.revature.beans.ItemType;
 public class ItemDTO {
 	@PrimaryKeyColumn (
 			name="id",
-			ordinal=2,
+			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED
 			)
 	private UUID id;
 	private String name;
 	@PrimaryKeyColumn (
 			name="storeName",
-			ordinal=1,
+			ordinal=0,
 			type=PrimaryKeyType.PARTITIONED
 			)
 	private String storeName;
 	private Double price;
 	@PrimaryKeyColumn (
 			name="category",
-			ordinal=0,
+			ordinal=2,
 			type=PrimaryKeyType.CLUSTERED
 			)
 	private ItemType category;
