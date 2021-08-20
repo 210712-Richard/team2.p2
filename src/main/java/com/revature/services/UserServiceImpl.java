@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User register (String username, UserType userType, String firstName, String lastName, 
+	public User register(String username, UserType userType, String firstName, String lastName, 
 			String email, String address, String storeName) {
 		
 		User user = new User();
@@ -79,20 +80,20 @@ public class UserServiceImpl implements UserService {
 		user.setAddress(address);
 		user.setUserType(userType);
 		user.setCurrency(0d);
-		if (UserType.SELLER.equals(userType)) {
-			user.setStoreName(storeName);
-		} else {
-			user.setStoreName(null);
-		}
+		user.setStoreName(storeName);
+		user.setShoppingCart(new ArrayList<Item>());
+		user.setWishList(new ArrayList<Item>());
 		userDao.save(new UserDTO(user));
 		return user;
 	}
 	
 	@Override
 	public Boolean checkAvailability(String newName) {
-		Mono<UserDTO> userOption = userDao.findByUsername(newName).defaultIfEmpty(null);
-		return userOption == null ? true : false;
+		//Mono<UserDTO> userOption = userDao.findByUsername(newName);
+		//return userOption == null ? true : false;
+		return true;
 		
 	}
+	
 
 }

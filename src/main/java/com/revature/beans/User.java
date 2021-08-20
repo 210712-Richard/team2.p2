@@ -51,6 +51,7 @@ public class User implements Serializable {
 		this.currency = currency;
 		this.userType = userType;
 		this.storeName = storeName;
+		
 	}
 
 	public String getUsername() {
