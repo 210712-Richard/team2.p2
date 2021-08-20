@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.revature.beans.User;
 import com.revature.beans.UserType;
@@ -18,7 +19,9 @@ import com.revature.services.UserService;
 
 import reactor.core.publisher.Mono;
 
+
 @RestController
+@RequestMapping("/users")
 public class UserController {
 	
 	@Autowired
@@ -38,6 +41,9 @@ public class UserController {
 				if(storeName.isEmpty()) {
 					return ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).body("<p>Need store name</p>");
 				}
+			} else {
+				type = UserType.CUSTOMER;
+				storeName = null;
 			}
 			
 			// call register method
