@@ -7,7 +7,7 @@ function fn() {
 
 	var config = {
 		// all have http://localhost:8080
-		//loginUrl: 'http://localhost:8080/users'
+		loginUrl: 'http://localhost:8080/users'
 		// khine url
 		// ivan url
 		// alby url
