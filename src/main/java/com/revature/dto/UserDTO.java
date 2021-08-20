@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import com.datastax.oss.driver.api.core.data.TupleValue;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
 
@@ -25,8 +27,11 @@ public class UserDTO {
 	private String address;
 	private Double currency;
 	private UserType userType;
-	private List<UUID> shoppingCart;
-	private List<UUID> wishList;
+	//private List<UUID> shoppingCart;
+	@Column("shoppingCart")
+	private List<TupleValue> shoppingCart;
+	@Column("wishList")
+	private List<TupleValue> wishList;
 	private String storeName;
 	
 	public UserDTO() {
@@ -41,11 +46,11 @@ public class UserDTO {
 		this.address = user.getAddress();
 		this.currency = user.getCurrency();
 		this.userType = user.getUserType();
-		this.shoppingCart = new ArrayList<UUID>();
-		user.getShoppingCart().stream().forEach((item)->{
+		this.shoppingCart = new ArrayList<TupleValue>();
+		user.getShoppingCart().stream().forEach((item) ->{
 			this.shoppingCart.add(item.getId());
 		});
-		this.wishList = new ArrayList<UUID>();
+		this.wishList = new ArrayList<TupleValue>();
 		user.getWishList().stream().forEach((item)->{
 			this.wishList.add(item.getId());
 		});
@@ -109,25 +114,25 @@ public class UserDTO {
 		this.userType = userType;
 	}
 
-	public List<UUID> getShoppingCart() {
+	public List<TupleValue> getShoppingCart() {
 		if(shoppingCart == null) {
-			shoppingCart = new ArrayList<UUID>();
+			shoppingCart = new ArrayList<TupleValue>();
 		}
 		return shoppingCart;
 	}
 
-	public void setShoppingCart(List<UUID> shoppingCart) {
+	public void setShoppingCart(List<TupleValue> shoppingCart) {
 		this.shoppingCart = shoppingCart;
 	}
 
-	public List<UUID> getWishList() {
+	public List<TupleValue> getWishList() {
 		if(wishList == null) {
-			wishList = new ArrayList<UUID>();
+			wishList = new ArrayList<TupleValue>();
 		}
 		return wishList;
 	}
 
-	public void setWishList(List<UUID> wishList) {
+	public void setWishList(List<TupleValue> wishList) {
 		this.wishList = wishList;
 	}
 

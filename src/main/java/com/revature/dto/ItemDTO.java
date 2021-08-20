@@ -6,17 +6,25 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import com.datastax.oss.driver.api.core.data.TupleValue;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.type.TupleType;
 import com.revature.beans.Item;
 import com.revature.beans.ItemType;
 
 @Table("item")
 public class ItemDTO {
+	
+	private static final TupleType ITEM_TUPLE = DataTypes.tupleOf(DataTypes.UUID, DataTypes.TEXT);
+	
+	
 	@PrimaryKeyColumn (
 			name="id",
 			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED
 			)
-	private UUID id;
+	private TupleValue id;
+	private UUID uuid;
 	private String name;
 	@PrimaryKeyColumn (
 			name="storeName",
@@ -38,7 +46,9 @@ public class ItemDTO {
 	}
 	
 	public ItemDTO(Item item) {
-		this.id = item.getId();
+		this.id = ITEM_TUPLE
+				.newValue(item.getUuid(), item.getStoreName());
+		this.uuid = item.getUuid();
 		this.name = item.getName();
 		this.storeName = item.getStoreName();
 		this.price = item.getPrice();
@@ -48,7 +58,9 @@ public class ItemDTO {
 	
 	public Item getItem() {
 		Item i = new Item();
-		i.setId(this.id);
+		TupleValue tupleType = ITEM_TUPLE.newValue(this.getUuid(), this.getStoreName());
+		i.setId(tupleType);
+		i.setUuid(this.uuid);
 		i.setName(this.name);
 		i.setStoreName(this.storeName);
 		i.setPrice(this.price);
@@ -57,14 +69,22 @@ public class ItemDTO {
 		return i;
 	}
 
-	public UUID getId() {
+
+	public TupleValue getId() {
 		return id;
 	}
-
-	public void setId(UUID id) {
+	public void setId(TupleValue id) {
 		this.id = id;
 	}
+	
+	public UUID getUuid() {
+		return uuid;
+	}
 
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+	
 	public String getName() {
 		return name;
 	}

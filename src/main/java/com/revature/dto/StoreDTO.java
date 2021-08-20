@@ -8,6 +8,7 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import com.datastax.oss.driver.api.core.data.TupleValue;
 import com.revature.beans.Store;
 
 @Table("store")
@@ -18,7 +19,7 @@ public class StoreDTO {
 			type=PrimaryKeyType.PARTITIONED
 			)
 	private String name;
-	private List<UUID> inventory;
+	private List<TupleValue> inventory;
 	private String owner;
 	
 	public StoreDTO() {
@@ -27,7 +28,7 @@ public class StoreDTO {
 	
 	public StoreDTO(Store store) {
 		this.name = store.getName();
-		this.inventory = new ArrayList<UUID>();
+		this.inventory = new ArrayList<TupleValue>();
 		store.getInventory().stream().forEach((item)->{
 			this.inventory.add(item.getId());
 		});
@@ -42,13 +43,13 @@ public class StoreDTO {
 		this.name = name;
 	}
 
-	public List<UUID> getInventory() {
+	public List<TupleValue> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(List<UUID> inventory) {
+	public void setInventory(List<TupleValue> inventory) {
 		if(inventory ==  null) {
-			inventory = new ArrayList<UUID>();
+			inventory = new ArrayList<TupleValue>();
 		}
 		this.inventory = inventory;
 	}
