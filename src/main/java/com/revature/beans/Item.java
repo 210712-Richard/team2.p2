@@ -3,9 +3,15 @@ package com.revature.beans;
 import java.io.Serializable;
 import java.util.UUID;
 
+import com.datastax.oss.driver.api.core.data.TupleValue;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.type.TupleType;
+
 public class Item implements Serializable {
+	private static final TupleType ITEM_TUPLE = DataTypes.tupleOf(DataTypes.UUID, DataTypes.TEXT);
 	// item UUID, item name (not necessarily unique), store item is from, price, category, images
-	private UUID id;
+	private TupleValue id;
+	private UUID uuid;
 	private String name;
 	private String storeName;
 	private Double price;
@@ -16,21 +22,30 @@ public class Item implements Serializable {
 		super();
 	}
 
-	public Item(UUID id, String name, String storeName, Double price, ItemType category) {
+	public Item(UUID uuid, String name, String storeName, Double price, ItemType category) {
 		this();
-		this.id = id;
+		this.uuid = uuid;
 		this.name = name;
 		this.storeName = storeName;
 		this.price = price;
 		this.category = category;
 	}
 
-	public UUID getId() {
+	public TupleValue getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(TupleValue id) {
 		this.id = id;
+	}
+	
+	
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getName() {
@@ -78,7 +93,7 @@ public class Item implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
@@ -97,10 +112,10 @@ public class Item implements Serializable {
 		Item other = (Item) obj;
 		if (category != other.category)
 			return false;
-		if (id == null) {
-			if (other.id != null)
+		if (uuid == null) {
+			if (other.uuid != null)
 				return false;
-		} else if (!id.equals(other.id))
+		} else if (!uuid.equals(other.uuid))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -127,9 +142,11 @@ public class Item implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
+		return "Item [id=" + uuid + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
 				+ category + ", picture=" + picture + "]";
 	}
+
+
 	
 	
 }
