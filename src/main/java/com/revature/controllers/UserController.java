@@ -64,12 +64,15 @@ public class UserController {
 	
 	
 	
-	/*
+	
 	@DeleteMapping
-	LOGOUT(){
-		
+	public ResponseEntity<Void> logout(WebSession session){
+		session.invalidate();
+		return ResponseEntity.noContent().build();
 	}
-	*/
+	
+	
+	
 	@PostMapping  // ("/users")
 	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
 		
