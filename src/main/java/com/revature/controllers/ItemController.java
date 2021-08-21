@@ -22,7 +22,7 @@ public class ItemController {
 	private ItemService itemService;
 	
 	//As a customer, I can get the list of all available items.
-	@GetMapping("{username}/item")
+	@GetMapping("{username}")
 	public ResponseEntity<Flux<Item>> getAllItems(@PathVariable("username") String name, WebSession session) {
 		User loggedUser = (User) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
