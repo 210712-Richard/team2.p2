@@ -73,7 +73,7 @@ public class UserController {
 	
 	
 	
-	@PostMapping  // ("/users")
+	@PutMapping  // ("/users")
 	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
 		
 		Mono<User> loggedUser = userService.login(u.getUsername());
