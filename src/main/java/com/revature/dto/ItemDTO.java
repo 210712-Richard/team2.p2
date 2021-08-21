@@ -19,7 +19,7 @@ public class ItemDTO {
 	
 	
 	@PrimaryKeyColumn (
-			name="id",
+			name="uuid",
 			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED
 			)
@@ -33,11 +33,6 @@ public class ItemDTO {
 			)
 	private String storeName;
 	private Double price;
-	@PrimaryKeyColumn (
-			name="category",
-			ordinal=2,
-			type=PrimaryKeyType.CLUSTERED
-			)
 	private ItemType category;
 	private String picture;
 	

@@ -17,7 +17,7 @@ import com.revature.dto.ItemDTO;
 public class StoreServiceImpl implements StoreService{
 
 	//gachaDao.findAll().stream().map(dto -> dto.getHistoricalCat()).collect(Collectors.toList());
-	private static Logger log = LogManager.getLogger(StoreServiceImpl.class);
+	//private static Logger log = LogManager.getLogger(StoreServiceImpl.class);
 	private ReactiveItemDao itemDao;
 	
 	@Autowired

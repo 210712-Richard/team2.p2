@@ -8,7 +8,6 @@ import com.datastax.oss.driver.api.core.type.DataTypes;
 import com.datastax.oss.driver.api.core.type.TupleType;
 
 public class Item implements Serializable {
-	private static final TupleType ITEM_TUPLE = DataTypes.tupleOf(DataTypes.UUID, DataTypes.TEXT);
 	// item UUID, item name (not necessarily unique), store item is from, price, category, images
 	private TupleValue id;
 	private UUID uuid;
