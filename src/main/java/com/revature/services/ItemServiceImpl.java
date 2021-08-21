@@ -29,4 +29,5 @@ public class ItemServiceImpl implements ItemService {
 	public Flux<Item> getItemsByPrice(Double price) {
 		return itemDao.findByPrice(price).map(dto -> dto.getItem());
 	}
+	
 }

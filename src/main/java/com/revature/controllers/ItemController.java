@@ -36,7 +36,7 @@ public class ItemController {
 		return ResponseEntity.ok(itemService.getAllItems());
 	}
 	
-	//As a customer, I can get list of items sorted by price.
+	//As a customer, I can get list of items sorted by price
 	@GetMapping("{price}/{username}")
 	public ResponseEntity<Flux<Item>> getItemsByPrice(@PathVariable("price") Double price, 
 			@PathVariable("username") String name, WebSession session) {
@@ -48,7 +48,6 @@ public class ItemController {
 			return ResponseEntity.status(403).build();
 		}
 		
-		return ResponseEntity.ok(itemService.getItemsByPrice(price));
-		
+		return ResponseEntity.ok(itemService.getItemsByPrice(price));	
 	}
 }

@@ -21,4 +21,5 @@ public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, St
 	Flux<ItemDTO> findByStoreName(String storeName);
 	Mono<ItemDTO> findById(TupleValue id);
 	Flux<ItemDTO> findByPrice(Double price);
+	
 }
