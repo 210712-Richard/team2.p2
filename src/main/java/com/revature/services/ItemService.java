@@ -7,6 +7,5 @@ import reactor.core.publisher.Flux;
 public interface ItemService {
 	Flux<Item> getAllItems();
 	
-	
-	
+	Flux<Item> getItemsByPrice(Double price);
 }
