@@ -1,11 +1,7 @@
 package com.revature.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import reactor.core.publisher.Flux;
 
 
@@ -15,9 +11,6 @@ import com.revature.dto.ItemDTO;
 
 @Service
 public class StoreServiceImpl implements StoreService{
-
-	//gachaDao.findAll().stream().map(dto -> dto.getHistoricalCat()).collect(Collectors.toList());
-	//private static Logger log = LogManager.getLogger(StoreServiceImpl.class);
 	private ReactiveItemDao itemDao;
 	
 	@Autowired
