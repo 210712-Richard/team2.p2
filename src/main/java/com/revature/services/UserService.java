@@ -14,4 +14,6 @@ public interface UserService {
 
 	Boolean checkAvailability(String newName);
 
+	void updateUser(User user);
+
 }
