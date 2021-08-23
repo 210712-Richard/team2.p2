@@ -10,7 +10,7 @@ import com.datastax.oss.driver.api.core.type.TupleType;
 
 public class Item implements Serializable {
 	// item UUID, item name (not necessarily unique), store item is from, price, category, images
-	private UUID id;
+	private UUID uuid;
 	private String name;
 	private String storeName;
 	private Double price;
@@ -21,9 +21,9 @@ public class Item implements Serializable {
 		super();
 	}
 
-	public Item(UUID id, String name, String storeName, Double price, ItemType category) {
+	public Item(UUID uuid, String name, String storeName, Double price, ItemType category) {
 		this();
-		this.id = id;
+		this.uuid = uuid;
 		this.name = name;
 		this.storeName = storeName;
 		this.price = price;
@@ -31,11 +31,11 @@ public class Item implements Serializable {
 	}
 
 	public UUID getId() {
-		return id;
+		return uuid;
 	}
 
-	public void setUuid(UUID id) {
-		this.id = id;
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	public String getName() {
@@ -80,7 +80,7 @@ public class Item implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, id, name, picture, price, storeName);
+		return Objects.hash(category, name, picture, price, storeName, uuid);
 	}
 
 	@Override
@@ -92,14 +92,14 @@ public class Item implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		return category == other.category && Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(picture, other.picture) && Objects.equals(price, other.price)
-				&& Objects.equals(storeName, other.storeName);
+		return category == other.category && Objects.equals(name, other.name) && Objects.equals(picture, other.picture)
+				&& Objects.equals(price, other.price) && Objects.equals(storeName, other.storeName)
+				&& Objects.equals(uuid, other.uuid);
 	}
 
 	@Override
 	public String toString() {
-		return "Item [id=" + id + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
+		return "Item [uuid=" + uuid + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
 				+ category + ", picture=" + picture + "]";
 	}
 
