@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserService {
 	public UserServiceImpl(ReactiveUserDao userDao) {
 		super();
 		this.userDao = userDao;
-		this.itemDao = itemDao;
 	}
 	
 	@Override
