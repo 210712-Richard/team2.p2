@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.beans.Item;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
 
@@ -13,5 +14,9 @@ public interface UserService {
 			String storeName);
 
 	Boolean checkAvailability(String newName);
+
+	void updateUser(User user);
+
+	Item addToCart(Item item);
 
 }

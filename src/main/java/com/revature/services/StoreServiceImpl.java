@@ -11,9 +11,6 @@ import reactor.core.publisher.Flux;
 
 @Service
 public class StoreServiceImpl implements StoreService{
-
-	//gachaDao.findAll().stream().map(dto -> dto.getHistoricalCat()).collect(Collectors.toList());
-	//private static Logger log = LogManager.getLogger(StoreServiceImpl.class);
 	private ReactiveItemDao itemDao;
 	
 	@Autowired
@@ -31,5 +28,10 @@ public class StoreServiceImpl implements StoreService{
 	public Item createItem(Item item) {
 		itemDao.save(new ItemDTO(item));
 		return item;
+	}
+
+	@Override
+	public void deleteItem(Item item) {
+		itemDao.delete(new ItemDTO(item));
 	}
 }

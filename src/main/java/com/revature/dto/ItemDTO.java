@@ -6,24 +6,17 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import com.datastax.oss.driver.api.core.data.TupleValue;
-import com.datastax.oss.driver.api.core.type.DataTypes;
-import com.datastax.oss.driver.api.core.type.TupleType;
 import com.revature.beans.Item;
 import com.revature.beans.ItemType;
 
 @Table("item")
 public class ItemDTO {
 	
-	private static final TupleType ITEM_TUPLE = DataTypes.tupleOf(DataTypes.UUID, DataTypes.TEXT);
-	
-	
 	@PrimaryKeyColumn (
 			name="uuid",
 			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED
 			)
-	private TupleValue id;
 	private UUID uuid;
 	private String name;
 	@PrimaryKeyColumn (
@@ -41,8 +34,6 @@ public class ItemDTO {
 	}
 	
 	public ItemDTO(Item item) {
-		this.id = ITEM_TUPLE
-				.newValue(item.getUuid(), item.getStoreName());
 		this.uuid = item.getUuid();
 		this.name = item.getName();
 		this.storeName = item.getStoreName();
@@ -53,8 +44,6 @@ public class ItemDTO {
 	
 	public Item getItem() {
 		Item i = new Item();
-		TupleValue tupleType = ITEM_TUPLE.newValue(this.getUuid(), this.getStoreName());
-		i.setId(tupleType);
 		i.setUuid(this.uuid);
 		i.setName(this.name);
 		i.setStoreName(this.storeName);
@@ -64,13 +53,6 @@ public class ItemDTO {
 		return i;
 	}
 
-
-	public TupleValue getId() {
-		return id;
-	}
-	public void setId(TupleValue id) {
-		this.id = id;
-	}
 	
 	public UUID getUuid() {
 		return uuid;
@@ -125,11 +107,11 @@ public class ItemDTO {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((storeName == null) ? 0 : storeName.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -143,11 +125,6 @@ public class ItemDTO {
 			return false;
 		ItemDTO other = (ItemDTO) obj;
 		if (category != other.category)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -169,13 +146,18 @@ public class ItemDTO {
 				return false;
 		} else if (!storeName.equals(other.storeName))
 			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ItemDTO [id=" + id + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
-				+ category + ", picture=" + picture + "]";
+		return "ItemDTO [uuid=" + uuid + ", name=" + name + ", storeName=" + storeName + ", price=" + price
+				+ ", category=" + category + ", picture=" + picture + "]";
 	}
 	
 

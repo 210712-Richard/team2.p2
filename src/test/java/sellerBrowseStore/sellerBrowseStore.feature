@@ -1,4 +1,4 @@
-Feature: As a Seller user, I can get a list of items for my store.
+Feature: As a Seller user, I can view items from my store.
 Scenario: As a Seller I can list items.
 
 Given url 'https//localhost:8080/store/walmart/items'
