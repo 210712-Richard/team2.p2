@@ -80,7 +80,7 @@ public class UserController {
 	
 	
 	// As a User I can login
-	@PostMapping("/users")
+	@PostMapping   //  /users
 	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
 		
 		Mono<User> loggedUser = userService.login(u.getUsername());
@@ -94,8 +94,9 @@ public class UserController {
 	}
 	
 	// As a User I can add items to my ShoppingCart
-	@PostMapping("/users/{username}/shoppingCart")
-	public ResponseEntity<Flux<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+	             // users/{username}/shoppingCart
+	@PostMapping("{username}/shoppingCart")
+	public ResponseEntity<List<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
 		
 		User loggedUser = (User) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
