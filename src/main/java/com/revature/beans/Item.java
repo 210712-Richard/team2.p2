@@ -1,7 +1,12 @@
 package com.revature.beans;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
+
+import com.datastax.oss.driver.api.core.data.TupleValue;
+import com.datastax.oss.driver.api.core.type.DataTypes;
+import com.datastax.oss.driver.api.core.type.TupleType;
 
 public class Item implements Serializable {
 	// item UUID, item name (not necessarily unique), store item is from, price, category, images
@@ -29,7 +34,7 @@ public class Item implements Serializable {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setUuid(UUID id) {
 		this.id = id;
 	}
 
@@ -75,15 +80,7 @@ public class Item implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
-		result = prime * result + ((price == null) ? 0 : price.hashCode());
-		result = prime * result + ((storeName == null) ? 0 : storeName.hashCode());
-		return result;
+		return Objects.hash(category, id, name, picture, price, storeName);
 	}
 
 	@Override
@@ -95,34 +92,9 @@ public class Item implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (category != other.category)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (picture == null) {
-			if (other.picture != null)
-				return false;
-		} else if (!picture.equals(other.picture))
-			return false;
-		if (price == null) {
-			if (other.price != null)
-				return false;
-		} else if (!price.equals(other.price))
-			return false;
-		if (storeName == null) {
-			if (other.storeName != null)
-				return false;
-		} else if (!storeName.equals(other.storeName))
-			return false;
-		return true;
+		return category == other.category && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(picture, other.picture) && Objects.equals(price, other.price)
+				&& Objects.equals(storeName, other.storeName);
 	}
 
 	@Override
@@ -130,6 +102,8 @@ public class Item implements Serializable {
 		return "Item [id=" + id + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
 				+ category + ", picture=" + picture + "]";
 	}
+
+
 	
 	
 }

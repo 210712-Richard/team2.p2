@@ -20,7 +20,7 @@ import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
 
 @Configuration
-@EnableReactiveCassandraRepositories(basePackages = {"com.revauture.data"})
+@EnableReactiveCassandraRepositories(basePackages = {"com.revature.data"})
 public class CassandraUtil {
 private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 	
@@ -31,8 +31,8 @@ private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 		
 		log.trace("Establishing connection with Cassandra");
 		DriverConfigLoader loader = DriverConfigLoader.fromClasspath("application.conf");
-		factory.setSessionBuilderConfigurer(builder -> builder.withConfigLoader(loader).withKeyspace("project2"));
-		factory.setKeyspaceName("gacha");
+		factory.setSessionBuilderConfigurer(builder -> builder.withConfigLoader(loader).withKeyspace("p2"));
+		factory.setKeyspaceName("p2");
 		
 		return factory;
 	}

@@ -11,25 +11,21 @@ import com.revature.beans.ItemType;
 
 @Table("item")
 public class ItemDTO {
+	
 	@PrimaryKeyColumn (
-			name="id",
-			ordinal=2,
+			name="uuid",
+			ordinal=1,
 			type=PrimaryKeyType.CLUSTERED
 			)
-	private UUID id;
+	private UUID uuid;
 	private String name;
 	@PrimaryKeyColumn (
 			name="storeName",
-			ordinal=1,
+			ordinal=0,
 			type=PrimaryKeyType.PARTITIONED
 			)
 	private String storeName;
 	private Double price;
-	@PrimaryKeyColumn (
-			name="category",
-			ordinal=0,
-			type=PrimaryKeyType.CLUSTERED
-			)
 	private ItemType category;
 	private String picture;
 	
@@ -38,7 +34,7 @@ public class ItemDTO {
 	}
 	
 	public ItemDTO(Item item) {
-		this.id = item.getId();
+		this.uuid = item.getUuid();
 		this.name = item.getName();
 		this.storeName = item.getStoreName();
 		this.price = item.getPrice();
@@ -48,7 +44,7 @@ public class ItemDTO {
 	
 	public Item getItem() {
 		Item i = new Item();
-		i.setId(this.id);
+		i.setUuid(this.uuid);
 		i.setName(this.name);
 		i.setStoreName(this.storeName);
 		i.setPrice(this.price);
@@ -57,14 +53,15 @@ public class ItemDTO {
 		return i;
 	}
 
-	public UUID getId() {
-		return id;
+	
+	public UUID getUuid() {
+		return uuid;
 	}
 
-	public void setId(UUID id) {
-		this.id = id;
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -110,11 +107,11 @@ public class ItemDTO {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((storeName == null) ? 0 : storeName.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
 
@@ -128,11 +125,6 @@ public class ItemDTO {
 			return false;
 		ItemDTO other = (ItemDTO) obj;
 		if (category != other.category)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (name == null) {
 			if (other.name != null)
@@ -154,13 +146,18 @@ public class ItemDTO {
 				return false;
 		} else if (!storeName.equals(other.storeName))
 			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ItemDTO [id=" + id + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
-				+ category + ", picture=" + picture + "]";
+		return "ItemDTO [uuid=" + uuid + ", name=" + name + ", storeName=" + storeName + ", price=" + price
+				+ ", category=" + category + ", picture=" + picture + "]";
 	}
 	
 

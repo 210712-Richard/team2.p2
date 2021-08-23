@@ -3,8 +3,6 @@ package com.revature.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import com.revature.beans.Item;
 import com.revature.data.ReactiveItemDao;
 
@@ -25,5 +23,9 @@ public class ItemServiceImpl implements ItemService {
 		return itemDao.findAll().map(dto -> dto.getItem());
 	}
 
-
+	@Override
+	public Flux<Item> getItemsByPrice(Double price) {
+		return null;
+	}
+	
 }

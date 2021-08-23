@@ -8,6 +8,7 @@ import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import com.datastax.oss.driver.api.core.data.TupleValue;
 import com.revature.beans.Store;
 
 @Table("store")
@@ -29,7 +30,7 @@ public class StoreDTO {
 		this.name = store.getName();
 		this.inventory = new ArrayList<UUID>();
 		store.getInventory().stream().forEach((item)->{
-			this.inventory.add(item.getId());
+			this.inventory.add(item.getUuid());
 		});
 		this.owner = store.getOwner();
 	}
