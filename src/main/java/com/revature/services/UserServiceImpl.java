@@ -92,9 +92,16 @@ public class UserServiceImpl implements UserService {
 		
 	}
 	
+	// Utility method used to save changes to the User database
 	@Override
 	public void updateUser(User user) {
 		userDao.save(new UserDTO(user));
+	}
+	
+	//As a User, I can add items to my ShoppingCart
+	@Override
+	public Item addToCart(Item item) {
+		return null;
 	}
 	
 

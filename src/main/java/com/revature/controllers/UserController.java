@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.revature.beans.Item;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
+import com.revature.services.ItemService;
 import com.revature.services.UserService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -27,6 +32,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private ItemService itemService;
 	
 	// test connection to localhost
 	@GetMapping("/hello")
@@ -72,8 +79,8 @@ public class UserController {
 	}
 	
 	
-	
-	@PutMapping  // ("/users")
+	// As a User I can login
+	@PostMapping   //  /users
 	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
 		
 		Mono<User> loggedUser = userService.login(u.getUsername());
@@ -84,6 +91,25 @@ public class UserController {
 		
 		session.getAttributes().put("loggedUser", u);
 		return ResponseEntity.ok(loggedUser);
+	}
+	
+	// As a User I can add items to my ShoppingCart
+	             // users/{username}/shoppingCart
+	@PostMapping("{username}/shoppingCart")
+	public ResponseEntity<List<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+		
+		User loggedUser = (User) session.getAttribute("loggedUser");
+		if(loggedUser == null) {
+			return ResponseEntity.status(401).build();
+		}
+		if(!loggedUser.getUsername().equals(username)) {
+			return ResponseEntity.status(403).build();
+		}
+		
+		loggedUser.getShoppingCart().add(item);
+		userService.updateUser(loggedUser);
+		
+		return ResponseEntity.ok(loggedUser.getShoppingCart());
 	}
 	
 	
