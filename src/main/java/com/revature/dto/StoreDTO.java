@@ -19,7 +19,7 @@ public class StoreDTO {
 			type=PrimaryKeyType.PARTITIONED
 			)
 	private String name;
-	private List<TupleValue> inventory;
+	private List<UUID> inventory;
 	private String owner;
 	
 	public StoreDTO() {
@@ -28,9 +28,9 @@ public class StoreDTO {
 	
 	public StoreDTO(Store store) {
 		this.name = store.getName();
-		this.inventory = new ArrayList<TupleValue>();
+		this.inventory = new ArrayList<UUID>();
 		store.getInventory().stream().forEach((item)->{
-			this.inventory.add(item.getId());
+			this.inventory.add(item.getUuid());
 		});
 		this.owner = store.getOwner();
 	}
@@ -43,13 +43,13 @@ public class StoreDTO {
 		this.name = name;
 	}
 
-	public List<TupleValue> getInventory() {
+	public List<UUID> getInventory() {
 		return inventory;
 	}
 
-	public void setInventory(List<TupleValue> inventory) {
+	public void setInventory(List<UUID> inventory) {
 		if(inventory ==  null) {
-			inventory = new ArrayList<TupleValue>();
+			inventory = new ArrayList<UUID>();
 		}
 		this.inventory = inventory;
 	}
