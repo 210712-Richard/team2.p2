@@ -10,4 +10,6 @@ public interface StoreService {
 	Flux<Item> listItems(String storeName);
 
 	Item createItem(Item item);
+	
+	void deleteItem(Item item);
 }
