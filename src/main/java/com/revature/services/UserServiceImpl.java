@@ -32,40 +32,39 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Mono<User> login(String username) {
 		
-//		Mono<User> userMono = userDao.findById(username).map(user -> user.getUser());
-//		
-//		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
-//				.map(user -> user.getShoppingCart())
-//				.flatMap(list -> Flux.fromIterable(list))
-//				.flatMap(id -> itemDao.findById(id))
-//				.map(item -> item.getItem())
-//				.collectList();
-//		Mono<Tuple2<List<Item>,User>> bothThings = shoppingCart.zipWith(userMono);
-//		Mono<User> user = bothThings.map(tuple -> {
-//			User u = tuple.getT2();
-//			List<Item> item = tuple.getT1();
-//			u.setShoppingCart(item);
-//			return u;
-//		});
-//		
-//		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
-//				.map(user2 -> user2.getWishList())
-//				.flatMap(list -> Flux.fromIterable(list))
-//				.flatMap(id -> itemDao.findById(id))
-//				.map(item -> item.getItem())
-//				.collectList();
-//		
-//		Mono<Tuple2<List<Item>,User>> both = wishList.zipWith(user);
-//		Mono<User> returnUser = both.map(tuple -> {
-//			User u2 = tuple.getT2();
-//			List<Item> item = tuple.getT1();
-//			u2.setWishList(item);
-//			return u2;
-//		});
+		Mono<User> userMono = userDao.findById(username).map(user -> user.getUser());
+		
+		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
+				.map(user -> user.getShoppingCart())
+				.flatMap(list -> Flux.fromIterable(list))
+				.flatMap(id -> itemDao.findByUuid(id))
+				.map(item -> item.getItem())
+				.collectList();
+		Mono<Tuple2<List<Item>,User>> bothThings = shoppingCart.zipWith(userMono);
+		Mono<User> user = bothThings.map(tuple -> {
+			User u = tuple.getT2();
+			List<Item> item = tuple.getT1();
+			u.setShoppingCart(item);
+			return u;
+		});
+		
+		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
+				.map(user2 -> user2.getWishList())
+				.flatMap(list -> Flux.fromIterable(list))
+				.flatMap(id -> itemDao.findByUuid(id))
+				.map(item -> item.getItem())
+				.collectList();
+		
+		Mono<Tuple2<List<Item>,User>> both = wishList.zipWith(user);
+		Mono<User> returnUser = both.map(tuple -> {
+			User u2 = tuple.getT2();
+			List<Item> item = tuple.getT1();
+			u2.setWishList(item);
+			return u2;
+		});
 				
 		
-//		return returnUser;
-		return null;
+		return returnUser;
 	}
 	
 	@Override

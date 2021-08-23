@@ -30,7 +30,7 @@ public class Item implements Serializable {
 		this.category = category;
 	}
 
-	public UUID getId() {
+	public UUID getUuid() {
 		return uuid;
 	}
 
