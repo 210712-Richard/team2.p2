@@ -29,4 +29,9 @@ public class StoreServiceImpl implements StoreService{
 		itemDao.save(new ItemDTO(item));
 		return item;
 	}
+
+	@Override
+	public void deleteItem(Item item) {
+		itemDao.delete(new ItemDTO(item));
+	}
 }
