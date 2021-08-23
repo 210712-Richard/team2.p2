@@ -15,6 +15,7 @@ public class User implements Serializable {
 	private String address;
 	private Double currency;
 	private UserType userType;
+	private String currentShop;
 	private List<Item> shoppingCart;
 	private List<Item> wishList;
 	private String storeName;
@@ -27,7 +28,7 @@ public class User implements Serializable {
 	}
 	
 	public User(String username, String firstName, String lastName, String email, String address, Double currency, UserType userType,
-			List<Item> shoppingCart, List<Item> wishList, String storeName) {
+			String currentShop, List<Item> shoppingCart, List<Item> wishList, String storeName) {
 		this();
 		this.username = username;
 		this.firstName = firstName;
@@ -36,6 +37,7 @@ public class User implements Serializable {
 		this.address = address;
 		this.currency = currency;
 		this.userType = userType;
+		this.currentShop = currentShop;
 		this.shoppingCart = shoppingCart;
 		this.wishList = wishList;
 		this.storeName = storeName;
@@ -109,6 +111,14 @@ public class User implements Serializable {
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
+	
+	public String getCurrentShop() {
+		return currentShop;
+	}
+
+	public void setCurrentShop(String currentShop) {
+		this.currentShop = currentShop;
+	}
 
 	public List<Item> getShoppingCart() {
 		if(shoppingCart == null) {
@@ -146,6 +156,7 @@ public class User implements Serializable {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
+		result = prime * result + ((currentShop == null) ? 0 : currentShop.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
@@ -175,6 +186,11 @@ public class User implements Serializable {
 			if (other.currency != null)
 				return false;
 		} else if (!currency.equals(other.currency))
+			return false;
+		if (currentShop == null) {
+			if (other.currentShop != null)
+				return false;
+		} else if (!currentShop.equals(other.currentShop))
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -219,8 +235,9 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", address=" + address + ", currency=" + currency + ", userType=" + userType + ", shoppingCart="
-				+ shoppingCart + ", wishList=" + wishList + ", storeName=" + storeName + "]";
+				+ ", address=" + address + ", currency=" + currency + ", userType=" + userType + ", currentShop="
+				+ currentShop + ", shoppingCart=" + shoppingCart + ", wishList=" + wishList + ", storeName=" + storeName
+				+ "]";
 	}
 	
 	

@@ -31,8 +31,8 @@ private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 		
 		log.trace("Establishing connection with Cassandra");
 		DriverConfigLoader loader = DriverConfigLoader.fromClasspath("application.conf");
-		factory.setSessionBuilderConfigurer(builder -> builder.withConfigLoader(loader).withKeyspace("project2"));
-		factory.setKeyspaceName("project2");
+		factory.setSessionBuilderConfigurer(builder -> builder.withConfigLoader(loader).withKeyspace("p2"));
+		factory.setKeyspaceName("p2");
 		
 		return factory;
 	}

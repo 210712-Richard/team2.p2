@@ -9,7 +9,6 @@ import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import com.datastax.oss.driver.api.core.data.TupleValue;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
 
@@ -27,11 +26,11 @@ public class UserDTO {
 	private String address;
 	private Double currency;
 	private UserType userType;
-	//private List<UUID> shoppingCart;
+	private String currentShop;
 	@Column("shoppingCart")
-	private List<TupleValue> shoppingCart;
+	private List<UUID> shoppingCart;
 	@Column("wishList")
-	private List<TupleValue> wishList;
+	private List<UUID> wishList;
 	private String storeName;
 	
 	public UserDTO() {
@@ -46,13 +45,14 @@ public class UserDTO {
 		this.address = user.getAddress();
 		this.currency = user.getCurrency();
 		this.userType = user.getUserType();
-		this.shoppingCart = new ArrayList<TupleValue>();
+		this.currentShop = user.getCurrentShop();
+		this.shoppingCart = new ArrayList<UUID>();
 		user.getShoppingCart().stream().forEach((item) ->{
-			this.shoppingCart.add(item.getId());
+			this.shoppingCart.add(item.getUuid());
 		});
-		this.wishList = new ArrayList<TupleValue>();
+		this.wishList = new ArrayList<UUID>();
 		user.getWishList().stream().forEach((item)->{
-			this.wishList.add(item.getId());
+			this.wishList.add(item.getUuid());
 		});
 		this.storeName = user.getStoreName();
 	}
@@ -64,6 +64,14 @@ public class UserDTO {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public String getCurrentShop() {
+		return currentShop;
+	}
+
+	public void setCurrentShop(String currentShop) {
+		this.currentShop = currentShop;
 	}
 
 	public String getFirstName() {
@@ -114,25 +122,25 @@ public class UserDTO {
 		this.userType = userType;
 	}
 
-	public List<TupleValue> getShoppingCart() {
+	public List<UUID> getShoppingCart() {
 		if(shoppingCart == null) {
-			shoppingCart = new ArrayList<TupleValue>();
+			shoppingCart = new ArrayList<UUID>();
 		}
 		return shoppingCart;
 	}
 
-	public void setShoppingCart(List<TupleValue> shoppingCart) {
+	public void setShoppingCart(List<UUID> shoppingCart) {
 		this.shoppingCart = shoppingCart;
 	}
 
-	public List<TupleValue> getWishList() {
+	public List<UUID> getWishList() {
 		if(wishList == null) {
-			wishList = new ArrayList<TupleValue>();
+			wishList = new ArrayList<UUID>();
 		}
 		return wishList;
 	}
 
-	public void setWishList(List<TupleValue> wishList) {
+	public void setWishList(List<UUID> wishList) {
 		this.wishList = wishList;
 	}
 
@@ -157,6 +165,7 @@ public class UserDTO {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
+		result = prime * result + ((currentShop == null) ? 0 : currentShop.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
@@ -186,6 +195,11 @@ public class UserDTO {
 			if (other.currency != null)
 				return false;
 		} else if (!currency.equals(other.currency))
+			return false;
+		if (currentShop == null) {
+			if (other.currentShop != null)
+				return false;
+		} else if (!currentShop.equals(other.currentShop))
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -229,9 +243,10 @@ public class UserDTO {
 
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", address=" + address + ", currency=" + currency + ", userType=" + userType + ", shoppingCart="
-				+ shoppingCart + ", wishList=" + wishList + ", storeName=" + storeName + "]";
+		return "UserDTO [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
+				+ email + ", address=" + address + ", currency=" + currency + ", userType=" + userType
+				+ ", currentShop=" + currentShop + ", shoppingCart=" + shoppingCart + ", wishList=" + wishList
+				+ ", storeName=" + storeName + "]";
 	}
 	
 

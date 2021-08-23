@@ -25,7 +25,7 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public Flux<Item> getItemsByPrice(Double price) {
-		return itemDao.findByPrice(price).map(dto -> dto.getItem());
+		return null;
 	}
 	
 }
