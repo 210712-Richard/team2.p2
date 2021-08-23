@@ -1,17 +1,13 @@
 package com.revature.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import reactor.core.publisher.Flux;
-
 
 import com.revature.beans.Item;
 import com.revature.data.ReactiveItemDao;
 import com.revature.dto.ItemDTO;
+
+import reactor.core.publisher.Flux;
 
 @Service
 public class StoreServiceImpl implements StoreService{

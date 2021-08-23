@@ -2,15 +2,14 @@ package com.revature.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.beans.Item;
 import com.revature.beans.User;
-import com.revature.data.ReactiveItemDao;
 import com.revature.beans.UserType;
+import com.revature.data.ReactiveItemDao;
 import com.revature.data.ReactiveUserDao;
 import com.revature.dto.UserDTO;
 

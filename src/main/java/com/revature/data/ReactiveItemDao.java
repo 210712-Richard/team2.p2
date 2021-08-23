@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.datastax.oss.driver.api.core.data.TupleValue;
 import com.revature.beans.ItemType;
 import com.revature.dto.ItemDTO;
-import com.revature.dto.UserDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
