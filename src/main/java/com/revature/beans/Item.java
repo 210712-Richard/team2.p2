@@ -1,6 +1,7 @@
 package com.revature.beans;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 import com.datastax.oss.driver.api.core.data.TupleValue;
@@ -9,8 +10,7 @@ import com.datastax.oss.driver.api.core.type.TupleType;
 
 public class Item implements Serializable {
 	// item UUID, item name (not necessarily unique), store item is from, price, category, images
-	private TupleValue id;
-	private UUID uuid;
+	private UUID id;
 	private String name;
 	private String storeName;
 	private Double price;
@@ -21,30 +21,21 @@ public class Item implements Serializable {
 		super();
 	}
 
-	public Item(UUID uuid, String name, String storeName, Double price, ItemType category) {
+	public Item(UUID id, String name, String storeName, Double price, ItemType category) {
 		this();
-		this.uuid = uuid;
+		this.id = id;
 		this.name = name;
 		this.storeName = storeName;
 		this.price = price;
 		this.category = category;
 	}
 
-	public TupleValue getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(TupleValue id) {
+	public void setUuid(UUID id) {
 		this.id = id;
-	}
-	
-	
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
 	}
 
 	public String getName() {
@@ -89,15 +80,7 @@ public class Item implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((category == null) ? 0 : category.hashCode());
-		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
-		result = prime * result + ((price == null) ? 0 : price.hashCode());
-		result = prime * result + ((storeName == null) ? 0 : storeName.hashCode());
-		return result;
+		return Objects.hash(category, id, name, picture, price, storeName);
 	}
 
 	@Override
@@ -109,39 +92,14 @@ public class Item implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Item other = (Item) obj;
-		if (category != other.category)
-			return false;
-		if (uuid == null) {
-			if (other.uuid != null)
-				return false;
-		} else if (!uuid.equals(other.uuid))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (picture == null) {
-			if (other.picture != null)
-				return false;
-		} else if (!picture.equals(other.picture))
-			return false;
-		if (price == null) {
-			if (other.price != null)
-				return false;
-		} else if (!price.equals(other.price))
-			return false;
-		if (storeName == null) {
-			if (other.storeName != null)
-				return false;
-		} else if (!storeName.equals(other.storeName))
-			return false;
-		return true;
+		return category == other.category && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(picture, other.picture) && Objects.equals(price, other.price)
+				&& Objects.equals(storeName, other.storeName);
 	}
 
 	@Override
 	public String toString() {
-		return "Item [id=" + uuid + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
+		return "Item [id=" + id + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
 				+ category + ", picture=" + picture + "]";
 	}
 
