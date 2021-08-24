@@ -46,14 +46,10 @@ public class UserDTO {
 		this.currency = user.getCurrency();
 		this.userType = user.getUserType();
 		this.currentShop = user.getCurrentShop();
-		this.shoppingCart = new ArrayList<UUID>();
-		user.getShoppingCart().stream().forEach((item) ->{
-			this.shoppingCart.add(item.getUuid());
-		});
-		this.wishList = new ArrayList<UUID>();
-		user.getWishList().stream().forEach((item)->{
-			this.wishList.add(item.getUuid());
-		});
+		this.shoppingCart = new ArrayList<>();
+		user.getShoppingCart().stream().forEach(item -> this.shoppingCart.add(item.getUuid()));
+		this.wishList = new ArrayList<>();
+		user.getWishList().stream().forEach(item-> this.wishList.add(item.getUuid()));
 		this.storeName = user.getStoreName();
 	}
 	
@@ -124,7 +120,7 @@ public class UserDTO {
 
 	public List<UUID> getShoppingCart() {
 		if(shoppingCart == null) {
-			shoppingCart = new ArrayList<UUID>();
+			shoppingCart = new ArrayList<>();
 		}
 		return shoppingCart;
 	}
@@ -135,7 +131,7 @@ public class UserDTO {
 
 	public List<UUID> getWishList() {
 		if(wishList == null) {
-			wishList = new ArrayList<UUID>();
+			wishList = new ArrayList<>();
 		}
 		return wishList;
 	}

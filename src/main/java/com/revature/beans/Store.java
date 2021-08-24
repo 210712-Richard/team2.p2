@@ -35,7 +35,7 @@ public class Store implements Serializable {
 
 	public void setInventory(List<Item> inventory) {
 		if(inventory ==  null) {
-			inventory = new ArrayList<Item>();
+			inventory = new ArrayList<>();
 		}
 		this.inventory = inventory;
 	}

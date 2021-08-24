@@ -56,8 +56,7 @@ private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 	
 	@Bean
 	public CassandraMappingContext mappingContext() {
-		CassandraMappingContext mappingContext = new CassandraMappingContext();
-		return mappingContext;
+		return new CassandraMappingContext();
 	}
 	
 	@Bean
