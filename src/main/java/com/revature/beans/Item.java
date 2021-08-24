@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.datastax.oss.driver.api.core.data.TupleValue;
-import com.datastax.oss.driver.api.core.type.DataTypes;
-import com.datastax.oss.driver.api.core.type.TupleType;
-
 public class Item implements Serializable {
 	// item UUID, item name (not necessarily unique), store item is from, price, category, images
 	private UUID uuid;

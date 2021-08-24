@@ -17,7 +17,6 @@ import com.revature.beans.Item;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
 import com.revature.services.StoreService;
-import com.revature.services.StoreServiceImpl;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -38,7 +37,7 @@ public class StoreController {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
 		// If Seller, then proceed
-		return Mono.just(storeService.createItem(item)).map((i) -> {
+		return Mono.just(storeService.createItem(item)).map(i -> {
 			if (i == null) {
 				return ResponseEntity.status(409).build();
 			} else {

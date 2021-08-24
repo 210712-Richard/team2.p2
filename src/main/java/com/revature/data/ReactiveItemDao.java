@@ -18,7 +18,7 @@ public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, St
 	Mono<ItemDTO> findByStoreNameAndUuid(String storeName, UUID uuid);
 	@AllowFiltering
 	@Query("SELECT * from item where uuid = ?0")
-	Mono<ItemDTO>findByUuid(UUID id);
+	Mono<ItemDTO> findByUuid(UUID id);
 
 	
 }

@@ -122,7 +122,7 @@ public class User implements Serializable {
 
 	public List<Item> getShoppingCart() {
 		if(shoppingCart == null) {
-			shoppingCart = new ArrayList<Item>();
+			shoppingCart = new ArrayList<>();
 		}
 		return shoppingCart;
 	}
@@ -133,7 +133,7 @@ public class User implements Serializable {
 
 	public List<Item> getWishList() {
 		if(wishList == null) {
-			wishList = new ArrayList<Item>();
+			wishList = new ArrayList<>();
 		}
 		return wishList;
 	}
