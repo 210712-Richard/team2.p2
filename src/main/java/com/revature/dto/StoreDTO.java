@@ -28,9 +28,7 @@ public class StoreDTO {
 	public StoreDTO(Store store) {
 		this.name = store.getName();
 		this.inventory = new ArrayList<>();
-		store.getInventory().stream().forEach(item->{
-			this.inventory.add(item.getUuid());
-		});
+		store.getInventory().stream().forEach(item-> this.inventory.add(item.getUuid()));
 		this.owner = store.getOwner();
 	}
 
