@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.revature.beans.Item;
 import com.revature.beans.User;
-import com.revature.data.ReactiveItemDao;
 import com.revature.beans.UserType;
+import com.revature.data.ReactiveItemDao;
 import com.revature.data.ReactiveUserDao;
 import com.revature.dto.UserDTO;
 
@@ -32,14 +32,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Mono<User> login(String username) {
 		
-		Mono<User> userMono = userDao.findById(username).map(user -> user.getUser());
+		Mono<User> userMono = userDao.findByUsername(username).map(user -> user.getUser());
 		
 		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
 				.map(user -> user.getShoppingCart())
 				.flatMap(list -> Flux.fromIterable(list))
-				.flatMap(id -> itemDao.findByUuid(id)
+				.flatMap(id -> itemDao.findByUuid(id))
 				.map(item -> item.getItem())
 				.collectList();
+		
 		Mono<Tuple2<List<Item>,User>> bothThings = shoppingCart.zipWith(userMono);
 		Mono<User> user = bothThings.map(tuple -> {
 			User u = tuple.getT2();
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
 		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
 				.map(user2 -> user2.getWishList())
 				.flatMap(list -> Flux.fromIterable(list))
-				.flatMap(id -> itemDao.findById(id))
+				.flatMap(id -> itemDao.findByUuid(id))
 				.map(item -> item.getItem())
 				.collectList();
 		
@@ -81,8 +82,8 @@ public class UserServiceImpl implements UserService {
 		user.setCurrency(0d);
 		user.setCurrentShop("No Store");
 		user.setStoreName(storeName);
-		user.setShoppingCart(new ArrayList<Item>());
-		user.setWishList(new ArrayList<Item>());
+		user.setShoppingCart(new ArrayList<>());
+		user.setWishList(new ArrayList<>());
 		userDao.save(new UserDTO(user));
 		return user;
 	}
