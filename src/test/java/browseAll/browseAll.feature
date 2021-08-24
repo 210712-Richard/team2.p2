@@ -6,4 +6,4 @@ And request {}
 When method get
 Then status 200
 And print 'Response is: ', response
-And match response contains {id: "#notnull"}
+And match response contains { id: "#notnull" }
