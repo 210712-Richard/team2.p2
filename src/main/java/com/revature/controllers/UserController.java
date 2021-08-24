@@ -39,7 +39,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value="{username}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> register(@RequestBody User user, @PathVariable("username") String name){
+	public Mono<ResponseEntity<User>> register(@RequestBody User user, @PathVariable("username") String name){
 		
 		// check if username is available
 		if (Boolean.TRUE.equals(userService.checkAvailability(name))) {
@@ -47,7 +47,7 @@ public class UserController {
 			if(UserType.SELLER.equals(user.getUserType())){
 				// userType is SELLER, check if storename is null
 				if(user.getStoreName().isEmpty()) {
-					return ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).body("<p>Need store name</p>");
+					return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());
 				}
 			} else {
 				user.setUserType(UserType.CUSTOMER);
@@ -55,13 +55,12 @@ public class UserController {
 			}
 			
 			// call register method
-			User created = userService.register(name, user.getUserType(), user.getFirstName(), user.getLastName(), 
-					user.getEmail(), user.getAddress(), user.getStoreName());
-			return ResponseEntity.ok(created);
+			return userService.register(name, user.getUserType(), user.getFirstName(), user.getLastName(), 
+					user.getEmail(), user.getAddress(), user.getStoreName()).map(u -> ResponseEntity.ok(u));
 			
 		} else {
 			// if availability returns false
-			return ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).body("<p>Username is taken</p>");
+			return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());
 		}
 		
 	}

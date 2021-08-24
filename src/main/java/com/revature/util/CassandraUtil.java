@@ -44,7 +44,7 @@ private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 		sessionFactory.setSession(session);
 		sessionFactory.setConverter(converter);
 		// Please do not drop all my tables
-		sessionFactory.setSchemaAction(SchemaAction.NONE);
+		sessionFactory.setSchemaAction(SchemaAction.CREATE_IF_NOT_EXISTS);
 		
 		return sessionFactory;
 	}
