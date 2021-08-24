@@ -47,13 +47,9 @@ public class UserDTO {
 		this.userType = user.getUserType();
 		this.currentShop = user.getCurrentShop();
 		this.shoppingCart = new ArrayList<>();
-		user.getShoppingCart().stream().forEach(item ->{
-			this.shoppingCart.add(item.getUuid());
-		});
+		user.getShoppingCart().stream().forEach(item -> this.shoppingCart.add(item.getUuid()));
 		this.wishList = new ArrayList<>();
-		user.getWishList().stream().forEach(item->{
-			this.wishList.add(item.getUuid());
-		});
+		user.getWishList().stream().forEach(item-> this.wishList.add(item.getUuid()));
 		this.storeName = user.getStoreName();
 	}
 	

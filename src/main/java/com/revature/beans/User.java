@@ -22,8 +22,8 @@ public class User implements Serializable {
 	
 	public User() {
 		super();
-		this.shoppingCart = new ArrayList<Item>();
-		this.wishList = new ArrayList<Item>();
+		this.shoppingCart = new ArrayList<>();
+		this.wishList = new ArrayList<>();
 		this.currency = 0d;
 	}
 	
