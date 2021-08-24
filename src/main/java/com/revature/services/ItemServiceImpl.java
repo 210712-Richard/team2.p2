@@ -1,10 +1,14 @@
 package com.revature.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.beans.Item;
 import com.revature.data.ReactiveItemDao;
+import com.revature.dto.ItemDTO;
 
 import reactor.core.publisher.Flux;
 
@@ -24,8 +28,8 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Flux<Item> getItemsByPrice(Double price) {
-		return null;
-	}
+	public List<ItemDTO> getItemsByPrice(Double price) {
+		return itemDao.findAll().toStream().filter(dto -> dto.getPrice() < price).collect(Collectors.toList());
+		}
 	
 }
