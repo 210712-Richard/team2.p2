@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User register(String username, UserType userType, String firstName, String lastName, 
+	public Mono<User> register(String username, UserType userType, String firstName, String lastName, 
 			String email, String address, String storeName) {
 		
 		User user = new User();
@@ -84,8 +84,7 @@ public class UserServiceImpl implements UserService {
 		user.setStoreName(storeName);
 		user.setShoppingCart(new ArrayList<>());
 		user.setWishList(new ArrayList<>());
-		userDao.save(new UserDTO(user));
-		return user;
+		return userDao.save(new UserDTO(user)).map(u -> u.getUser());
 	}
 	
 	@Override
