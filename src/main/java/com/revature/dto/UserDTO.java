@@ -26,6 +26,7 @@ public class UserDTO {
 	private String address;
 	private Double currency;
 	private UserType userType;
+	@Column("currentShop")
 	private String currentShop;
 	@Column("shoppingCart")
 	private List<UUID> shoppingCart;
