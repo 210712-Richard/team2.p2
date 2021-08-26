@@ -77,6 +77,7 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	// As a User I can log in
 	@PostMapping
 	public Mono<ResponseEntity<User>> login(@RequestBody User user, WebSession session) {
 		if (user == null) {

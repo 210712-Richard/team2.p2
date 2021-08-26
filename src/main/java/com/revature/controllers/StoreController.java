@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.WebSession;
 
 import com.revature.beans.Item;
+import com.revature.beans.Store;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
 import com.revature.services.ItemService;
@@ -70,5 +71,21 @@ public class StoreController {
 		// If Seller, then proceed to delete
 		storeService.deleteItem(item);
 		return Mono.just(ResponseEntity.status(201).build());
+	}
+	
+	// As a Seller, I can log in
+	@PostMapping
+	public Mono<ResponseEntity<Store>> login(@RequestBody Store store, WebSession session) {
+		if (store == null) {
+			return Mono.just(ResponseEntity.badRequest().build());
+		}
+		return storeService.login(store.getName()).single().map(u -> {
+			if (store.getName() == null) {
+				return ResponseEntity.notFound().build();
+			}else {
+				session.getAttributes().put(SessionFields.LOGGED_USER, store);
+				return ResponseEntity.ok(store);
+			}
+		});
 	}
 }

@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 	//As a User, I can add items to my ShoppingCart
 	@Override
 	public Mono<User> addToCart(String username, UUID itemId) {
-		
+		/*
 		
 		Mono<User> userMono = userDao.findByUsername(username).map(userDto -> userDto.getUser());
 		Mono<Item> itemMono = itemDao.findByUuid(itemId).map(itemDto -> itemDto.getItem());
@@ -115,8 +115,16 @@ public class UserServiceImpl implements UserService {
 				.collectList();
 		
 		
-		Mono<Tuple2<List<Item>,User>> bothThings = shoppingCart.zipWith(userMono);
-		Mono<User> user = bothThings.map(tuple -> {
+		Mono<Tuple2<List<Item>,Item>> itemAndCart = shoppingCart.zipWith(itemMono);
+		Mono<User> user = itemAndCart.map(tuple -> {
+			User u = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			u.setShoppingCart(items);
+			return u;
+		});
+		
+		Mono<Tuple2<List<Item>,User>> userAndCart = shoppingCart.zipWith(userMono);
+		Mono<User> user = userAndCart.map(tuple -> {
 			User u = tuple.getT2();
 			List<Item> items = tuple.getT1();
 			u.setShoppingCart(items);
@@ -124,6 +132,7 @@ public class UserServiceImpl implements UserService {
 		});
 		
 		
+		return user;*/
 		return null;
 	}	
 	

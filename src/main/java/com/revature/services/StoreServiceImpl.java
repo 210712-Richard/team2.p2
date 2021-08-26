@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.revature.dto.StoreDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 @Service
 public class StoreServiceImpl implements StoreService{
@@ -52,5 +54,25 @@ public class StoreServiceImpl implements StoreService{
 		return storeDao.save(new StoreDTO(store)).map(s -> s.getStore());
 	}
 	
-	
+	@Override
+	public Mono<Store> login(String username){
+		Mono<Store> storeMono = storeDao.findByName(username).map(storeDto -> storeDto.getStore());
+		
+		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(username))
+				.map(storeDto -> storeDto.getInventory())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		Mono<Tuple2<List<Item>,Store>> itemsAndStore = inventory.zipWith(storeMono);
+		Mono<Store> returnStore = itemsAndStore.map(tuple -> {
+			Store store = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			store.setInventory(items);
+			return store;
+		});
+		
+		return returnStore;
+	}
 }
