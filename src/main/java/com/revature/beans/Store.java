@@ -9,16 +9,18 @@ public class Store implements Serializable {
 	private String name;
 	private List<Item> inventory;
 	private String owner;
+	private Double currency;
 	
 	public Store() {
 		super();
 	}
 	
-	public Store(String name, List<Item> inventory, String owner) {
+	public Store(String name, List<Item> inventory, String owner, Double currency) {
 		this();
 		this.name = name;
 		this.inventory = inventory;
 		this.owner = owner;
+		this.currency = currency;
 	}
 
 	public String getName() {
@@ -48,10 +50,19 @@ public class Store implements Serializable {
 		this.owner = owner;
 	}
 
+	public Double getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Double currency) {
+		this.currency = currency;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
@@ -67,6 +78,11 @@ public class Store implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Store other = (Store) obj;
+		if (currency == null) {
+			if (other.currency != null)
+				return false;
+		} else if (!currency.equals(other.currency))
+			return false;
 		if (inventory == null) {
 			if (other.inventory != null)
 				return false;
@@ -87,7 +103,7 @@ public class Store implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Store [name=" + name + ", inventory=" + inventory + ", owner=" + owner + "]";
+		return "Store [name=" + name + ", inventory=" + inventory + ", owner=" + owner + ", currency=" + currency + "]";
 	}
 	
 	

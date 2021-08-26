@@ -1,7 +1,5 @@
 package com.revature.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import com.revature.beans.Item;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
 import com.revature.services.ItemService;
+import com.revature.services.StoreService;
 import com.revature.services.UserService;
 
 import reactor.core.publisher.Flux;
@@ -32,6 +31,8 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private ItemService itemService;
+	@Autowired
+	private StoreService storeService;
 	
 	// test connection to localhost
 	@GetMapping("/hello")
@@ -41,25 +42,21 @@ public class UserController {
 	
 	// As a User I can create an account
 	@PostMapping(value="{username}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public Mono<ResponseEntity<User>> register(@RequestBody User user, @PathVariable("username") String name){
+	public Mono<ResponseEntity<Object>> register(@RequestBody User user, @PathVariable("username") String name){
 		
 		// check if username is available
 		if (Boolean.TRUE.equals(userService.checkAvailability(name))) {
 			// get userType and check if SELLER
 			if(UserType.SELLER.equals(user.getUserType())){
-				// userType is SELLER, check if storename is null
-				if(user.getStoreName().isEmpty()) {
-					return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());
-				}
 				// If userType is SELLER, need to register their store with the database
+				String owner = user.getFirstName() + " " + user.getLastName();
+				return storeService.register(name, owner, user.getCurrency()).map(s -> ResponseEntity.ok(s));
+				
 			} else {
 				user.setUserType(UserType.CUSTOMER);
-				user.setStoreName("NoStore");
+				return userService.register(name, user.getFirstName(), user.getLastName(),
+						user.getEmail(), user.getAddress(), user.getCurrency()).map(u -> ResponseEntity.ok(u));
 			}
-			
-			// call register method
-			return userService.register(name, user.getUserType(), user.getFirstName(), user.getLastName(), 
-					user.getEmail(), user.getAddress(), user.getCurrency(), user.getStoreName()).map(u -> ResponseEntity.ok(u));
 			
 		} else {
 			// if availability returns false

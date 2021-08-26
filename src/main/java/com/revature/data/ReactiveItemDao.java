@@ -14,8 +14,8 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, String>{
-	Flux<ItemDTO> findByStoreName(String storeName);
-	Mono<ItemDTO> findByStoreNameAndUuid(String storeName, UUID uuid);
+	Flux<ItemDTO> findByStorename(String storeName);
+	Mono<ItemDTO> findByStorenameAndUuid(String storeName, UUID uuid);
 	
 	Flux<ItemDTO> findByPrice(Double price);
 	//take the whole query and filter what you want

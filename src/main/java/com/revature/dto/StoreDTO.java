@@ -15,6 +15,7 @@ public class StoreDTO {
 	private String name;
 	private List<UUID> inventory;
 	private String owner;
+	private Double currency;
 	
 	public StoreDTO() {
 		
@@ -25,6 +26,7 @@ public class StoreDTO {
 		this.inventory = new ArrayList<>();
 		store.getInventory().stream().forEach(item-> this.inventory.add(item.getUuid()));
 		this.owner = store.getOwner();
+		this.currency = store.getCurrency();
 	}
 
 	public String getName() {
@@ -54,10 +56,19 @@ public class StoreDTO {
 		this.owner = owner;
 	}
 
+	public Double getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Double currency) {
+		this.currency = currency;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
 		result = prime * result + ((inventory == null) ? 0 : inventory.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
@@ -73,6 +84,11 @@ public class StoreDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		StoreDTO other = (StoreDTO) obj;
+		if (currency == null) {
+			if (other.currency != null)
+				return false;
+		} else if (!currency.equals(other.currency))
+			return false;
 		if (inventory == null) {
 			if (other.inventory != null)
 				return false;
@@ -93,8 +109,22 @@ public class StoreDTO {
 
 	@Override
 	public String toString() {
-		return "StoreDTO [name=" + name + ", inventory=" + inventory + ", owner=" + owner + "]";
+		return "StoreDTO [name=" + name + ", inventory=" + inventory + ", owner=" + owner + ", currency=" + currency
+				+ "]";
 	}
+
+	
+	public Store getStore() {
+		Store store = new Store();
+		store.setName(this.name);
+		store.setOwner(this.owner);
+		// get by this.name And uuid provided
+		// for loop of size of list?
+		store.setInventory(new ArrayList<>());
+		store.setCurrency(this.currency);
+		return store;
+	}
+	
 	
 
 }

@@ -1,4 +1,4 @@
-package com.revature.services;
+ package com.revature.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +69,8 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public Mono<User> register(String username, UserType userType, String firstName, String lastName, 
-			String email, String address, Double currency, String storeName) {
+	public Mono<User> register(String username, String firstName, String lastName, 
+			String email, String address, Double currency) {
 		
 		User user = new User();
 		user.setUsername(username);
@@ -78,10 +78,9 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(lastName);
 		user.setEmail(email);
 		user.setAddress(address);
-		user.setUserType(userType);
+		user.setUserType(UserType.CUSTOMER);
 		user.setCurrency(currency);
 		user.setCurrentShop("No Store");
-		user.setStoreName(storeName);
 		user.setShoppingCart(new ArrayList<>());
 		user.setWishList(new ArrayList<>());
 		return userDao.save(new UserDTO(user)).map(u -> u.getUser());
