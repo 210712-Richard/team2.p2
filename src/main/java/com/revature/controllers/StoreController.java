@@ -17,7 +17,6 @@ import org.springframework.web.server.WebSession;
 import com.revature.beans.Item;
 import com.revature.beans.Store;
 import com.revature.beans.User;
-import com.revature.beans.UserType;
 import com.revature.services.ItemService;
 import com.revature.services.StoreService;
 import com.revature.util.SessionFields;
@@ -86,4 +85,20 @@ public class StoreController {
 		session.getAttributes().put("loggedStore", store);
 		return ResponseEntity.ok(loggedStore);
 	}
+	
+	// As a User I can create an account
+	@PostMapping(value="{name}", produces=MediaType.APPLICATION_JSON_VALUE)
+	public Mono<ResponseEntity<Object>> register(@RequestBody Store store, @PathVariable("name") String name){
+		
+		// check if name is available
+		if (Boolean.TRUE.equals(storeService.checkAvailability(name))) {
+			// register store
+			return storeService.register(name, store.getOwner(), store.getCurrency()).map(u -> ResponseEntity.ok(u));
+		} else {
+			// if availability returns false
+			return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());
+		}
+		
+	}
+	
 }

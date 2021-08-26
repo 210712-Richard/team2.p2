@@ -2,8 +2,14 @@ package com.revature.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties;
+import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties.Data.Repository;
+import org.springframework.boot.actuate.metrics.data.MetricsRepositoryMethodInvocationListener;
+import org.springframework.boot.actuate.metrics.data.RepositoryTagsProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.cassandra.SessionFactory;
 import org.springframework.data.cassandra.config.CqlSessionFactoryBean;
 import org.springframework.data.cassandra.config.SchemaAction;
@@ -18,6 +24,8 @@ import org.springframework.data.cassandra.repository.config.EnableReactiveCassan
 
 import com.datastax.oss.driver.api.core.CqlSession;
 import com.datastax.oss.driver.api.core.config.DriverConfigLoader;
+
+import io.micrometer.core.instrument.MeterRegistry;
 
 @Configuration
 @EnableReactiveCassandraRepositories(basePackages = {"com.revature.data"})
@@ -43,7 +51,7 @@ private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 		((MappingCassandraConverter) converter).setUserTypeResolver(new SimpleUserTypeResolver(session));
 		sessionFactory.setSession(session);
 		sessionFactory.setConverter(converter);
-		// Please do not drop all my tables
+		// Create tables if they don't already exist
 		sessionFactory.setSchemaAction(SchemaAction.CREATE_IF_NOT_EXISTS);
 		
 		return sessionFactory;
@@ -63,5 +71,15 @@ private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 	public CassandraOperations cassandraTemplate(SessionFactory sessionFactory, CassandraConverter converter) {
 		return new CassandraTemplate(sessionFactory, converter);
 	}
+	
+	// get rid of some of the warns at start up
+	@Bean
+	public static MetricsRepositoryMethodInvocationListener metricsRepositoryMethodInvocationListener(MetricsProperties
+	        metricsProperties, @Lazy MeterRegistry registry, RepositoryTagsProvider tagsProvider) {
+	    Repository properties = metricsProperties.getData().getRepository();
+	    return new MetricsRepositoryMethodInvocationListener(registry, tagsProvider, properties.getMetricName(), 
+	        properties.getAutotime());
+	}
+	
 
 }
