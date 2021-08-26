@@ -47,18 +47,9 @@ public class UserController {
 		
 		// check if username is available
 		if (Boolean.TRUE.equals(userService.checkAvailability(name))) {
-			// get userType and check if SELLER
-			if(UserType.SELLER.equals(user.getUserType())){
-				// If userType is SELLER, need to register their store with the database
-				String owner = user.getFirstName() + " " + user.getLastName();
-				return storeService.register(name, owner, user.getCurrency()).map(s -> ResponseEntity.ok(s));
-				
-			} else {
-				user.setUserType(UserType.CUSTOMER);
-				return userService.register(name, user.getFirstName(), user.getLastName(),
-						user.getEmail(), user.getAddress(), user.getCurrency()).map(u -> ResponseEntity.ok(u));
-			}
-			
+			// register customer
+			return userService.register(name, user.getFirstName(), user.getLastName(),
+					user.getEmail(), user.getAddress(), user.getCurrency()).map(u -> ResponseEntity.ok(u));
 		} else {
 			// if availability returns false
 			return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());

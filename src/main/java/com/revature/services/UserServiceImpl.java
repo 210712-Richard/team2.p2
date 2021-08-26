@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.revature.beans.Item;
 import com.revature.beans.User;
-import com.revature.beans.UserType;
 import com.revature.data.ReactiveItemDao;
 import com.revature.data.ReactiveUserDao;
 import com.revature.dto.UserDTO;
@@ -78,7 +77,6 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(lastName);
 		user.setEmail(email);
 		user.setAddress(address);
-		user.setUserType(UserType.CUSTOMER);
 		user.setCurrency(currency);
 		user.setCurrentShop("No Store");
 		user.setShoppingCart(new ArrayList<>());
@@ -88,6 +86,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public Boolean checkAvailability(String newName) {
+		// currently doesn't work
+		// get rid of some of the warns at start up
 		return true;
 		
 	}
