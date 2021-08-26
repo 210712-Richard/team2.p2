@@ -10,8 +10,8 @@ public interface UserService {
 
 	Mono<User> login(String username);
 
-	Mono<User> register(String username, UserType userType, String firstName, String lastName, String email, String address,
-			String storeName);
+	Mono<User> register(String username, String firstName, String lastName, String email, String address,
+			Double currency);
 
 	Boolean checkAvailability(String newName);
 

@@ -8,7 +8,7 @@ public class Item implements Serializable {
 	// item UUID, item name (not necessarily unique), store item is from, price, category, images
 	private UUID uuid;
 	private String name;
-	private String storeName;
+	private String storename;
 	private Double price;
 	private ItemType category;
 	private String picture;
@@ -17,11 +17,11 @@ public class Item implements Serializable {
 		super();
 	}
 
-	public Item(UUID uuid, String name, String storeName, Double price, ItemType category) {
+	public Item(UUID uuid, String name, String storename, Double price, ItemType category) {
 		this();
 		this.uuid = uuid;
 		this.name = name;
-		this.storeName = storeName;
+		this.storename = storename;
 		this.price = price;
 		this.category = category;
 	}
@@ -42,12 +42,12 @@ public class Item implements Serializable {
 		this.name = name;
 	}
 
-	public String getStoreName() {
-		return storeName;
+	public String getStorename() {
+		return storename;
 	}
 
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
+	public void setStorename(String storename) {
+		this.storename = storename;
 	}
 
 	public Double getPrice() {
@@ -76,7 +76,7 @@ public class Item implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(category, name, picture, price, storeName, uuid);
+		return Objects.hash(category, name, picture, price, storename, uuid);
 	}
 
 	@Override
@@ -89,13 +89,13 @@ public class Item implements Serializable {
 			return false;
 		Item other = (Item) obj;
 		return category == other.category && Objects.equals(name, other.name) && Objects.equals(picture, other.picture)
-				&& Objects.equals(price, other.price) && Objects.equals(storeName, other.storeName)
+				&& Objects.equals(price, other.price) && Objects.equals(storename, other.storename)
 				&& Objects.equals(uuid, other.uuid);
 	}
 
 	@Override
 	public String toString() {
-		return "Item [uuid=" + uuid + ", name=" + name + ", storeName=" + storeName + ", price=" + price + ", category="
+		return "Item [uuid=" + uuid + ", name=" + name + ", storeName=" + storename + ", price=" + price + ", category="
 				+ category + ", picture=" + picture + "]";
 	}
 
