@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +16,8 @@ import org.springframework.web.server.WebSession;
 
 import com.revature.beans.Item;
 import com.revature.beans.User;
-import com.revature.beans.UserType;
 import com.revature.services.ItemService;
-import com.revature.services.StoreService;
 import com.revature.services.UserService;
-import com.revature.util.SessionFields;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,8 +31,6 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private ItemService itemService;
-	@Autowired
-	private StoreService storeService;
 	
 	// test connection to localhost
 	@GetMapping("/hello")
@@ -47,18 +44,9 @@ public class UserController {
 		
 		// check if username is available
 		if (Boolean.TRUE.equals(userService.checkAvailability(name))) {
-			// get userType and check if SELLER
-			if(UserType.SELLER.equals(user.getUserType())){
-				// If userType is SELLER, need to register their store with the database
-				String owner = user.getFirstName() + " " + user.getLastName();
-				return storeService.register(name, owner, user.getCurrency()).map(s -> ResponseEntity.ok(s));
-				
-			} else {
-				user.setUserType(UserType.CUSTOMER);
-				return userService.register(name, user.getFirstName(), user.getLastName(),
-						user.getEmail(), user.getAddress(), user.getCurrency()).map(u -> ResponseEntity.ok(u));
-			}
-			
+			// register customer
+			return userService.register(name, user.getFirstName(), user.getLastName(),
+					user.getEmail(), user.getAddress(), user.getCurrency()).map(u -> ResponseEntity.ok(u));
 		} else {
 			// if availability returns false
 			return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());
@@ -76,23 +64,23 @@ public class UserController {
 	}
 	
 	// As a User I can login
-		@PostMapping
-		public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
-			
-			Mono<User> loggedUser = userService.login(u.getUsername());
-			
-			if(loggedUser == null) {
-				return ResponseEntity.status(401).build();
-				}
-			
-			session.getAttributes().put(SessionFields.LOGGED_USER, u);
-			return ResponseEntity.ok(loggedUser);
-		}
-
+	@PostMapping
+	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
+		
+		Mono<User> loggedUser = userService.login(u.getUsername());
+		
+		if(loggedUser == null) {
+			return ResponseEntity.status(401).build();
+			}
+		
+		session.getAttributes().put("loggedUser", u);
+		return ResponseEntity.ok(loggedUser);
+	}
+	
 	
 	// As a User I can add items to my ShoppingCart
 	@PostMapping("{username}/shoppingCart")
-	public ResponseEntity<Flux<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+	public ResponseEntity<Flux<Item>> addToCart(@RequestBody UUID itemId, @PathVariable("username") String username, WebSession session){
 		
 		User loggedUser = (User) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
@@ -102,8 +90,9 @@ public class UserController {
 			return ResponseEntity.status(403).build();
 		}
 		
-		loggedUser.getShoppingCart().add(item);
-		userService.updateUser(loggedUser);
+		Mono<User> user = userService.addToCart(username, itemId);
+		
+		//userService.updateUser(user);
 		
 		return ResponseEntity.ok(userService.viewShoppingCart(username));
 	}

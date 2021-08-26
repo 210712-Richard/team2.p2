@@ -2,13 +2,13 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.beans.Item;
 import com.revature.beans.User;
-import com.revature.beans.UserType;
 import com.revature.data.ReactiveItemDao;
 import com.revature.data.ReactiveUserDao;
 import com.revature.dto.UserDTO;
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Mono<User> login(String username) {
 		
-		Mono<User> userMono = userDao.findByUsername(username).map(user -> user.getUser());
+		Mono<User> userMono = userDao.findByUsername(username).map(userDto -> userDto.getUser());
 		
 		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
 				.map(userDto -> userDto.getShoppingCart())
@@ -80,7 +80,6 @@ public class UserServiceImpl implements UserService {
 		user.setLastName(lastName);
 		user.setEmail(email);
 		user.setAddress(address);
-		user.setUserType(UserType.CUSTOMER);
 		user.setCurrency(currency);
 		user.setCurrentShop("No Store");
 		user.setShoppingCart(new ArrayList<>());
@@ -90,6 +89,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public Boolean checkAvailability(String newName) {
+		// currently doesn't work
+		// get rid of some of the warns at start up
 		return true;
 		
 	}
@@ -102,9 +103,38 @@ public class UserServiceImpl implements UserService {
 	
 	//As a User, I can add items to my ShoppingCart
 	@Override
-	public Mono<Item> addToCart(Item item) {
+	public Mono<User> addToCart(String username, UUID itemId) {
 		
-		return null;
+		
+		Mono<User> userMono = userDao.findByUsername(username).map(userDto -> userDto.getUser());
+		Mono<Item> itemMono = itemDao.findByUuid(itemId).map(itemDto -> itemDto.getItem());
+		
+		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
+				.map(userDto -> userDto.getShoppingCart())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		
+		Mono<Tuple2<List<Item>,Item>> itemAndCart = shoppingCart.zipWith(itemMono);
+		Mono<List<Item>> cart = itemAndCart.map(tuple -> {
+			Item item = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			items.add(item);
+			return items;
+		});
+		
+		Mono<Tuple2<List<Item>,User>> userAndCart = cart.zipWith(userMono);
+		Mono<User> user = userAndCart.map(tuple -> {
+			User u = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			u.setShoppingCart(items);
+			return u;
+		});
+		
+		
+		return user;
 	}	
 	
 	@Override
