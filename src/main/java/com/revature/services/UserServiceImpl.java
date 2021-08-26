@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
 		Mono<User> userMono = userDao.findByUsername(username).map(user -> user.getUser());
 		
 		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
-				.map(user -> user.getShoppingCart())
-				.flatMap(list -> Flux.fromIterable(list))
-				.flatMap(id -> itemDao.findByUuid(id))
-				.map(item -> item.getItem())
+				.map(userDto -> userDto.getShoppingCart())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
 				.collectList();
 		
 		Mono<Tuple2<List<Item>,User>> bothThings = shoppingCart.zipWith(userMono);
@@ -50,10 +50,10 @@ public class UserServiceImpl implements UserService {
 		});
 		
 		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
-				.map(user2 -> user2.getWishList())
-				.flatMap(list -> Flux.fromIterable(list))
-				.flatMap(id -> itemDao.findByUuid(id))
-				.map(item -> item.getItem())
+				.map(userDto -> userDto.getWishList())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
 				.collectList();
 		
 		Mono<Tuple2<List<Item>,User>> both = wishList.zipWith(user);
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public Mono<User> register(String username, UserType userType, String firstName, String lastName, 
-			String email, String address, String storeName) {
+			String email, String address, Double currency, String storeName) {
 		
 		User user = new User();
 		user.setUsername(username);
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		user.setEmail(email);
 		user.setAddress(address);
 		user.setUserType(userType);
-		user.setCurrency(0d);
+		user.setCurrency(currency);
 		user.setCurrentShop("No Store");
 		user.setStoreName(storeName);
 		user.setShoppingCart(new ArrayList<>());
@@ -101,9 +101,30 @@ public class UserServiceImpl implements UserService {
 	
 	//As a User, I can add items to my ShoppingCart
 	@Override
-	public Item addToCart(Item item) {
+	public Mono<Item> addToCart(Item item) {
+		
 		return null;
+	}	
+	
+	@Override
+	public Flux<Item> viewShoppingCart(String username){
+		
+		Flux<Item> shoppingCart = Flux.from(userDao.findByUsername(username))
+				.map(userDto -> userDto.getShoppingCart())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem());
+		return shoppingCart;
 	}
 	
+	@Override
+	public Flux<Item> viewWishList(String username) {
+		Flux<Item> wishList = Flux.from(userDao.findByUsername(username))
+				.map(userDto -> userDto.getWishList())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem());
+		return wishList;
+	}
 
 }
