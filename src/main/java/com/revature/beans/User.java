@@ -14,7 +14,6 @@ public class User implements Serializable {
 	private String email;
 	private String address;
 	private Double currency;
-	private UserType userType;
 	private String currentShop;
 	private List<Item> shoppingCart;
 	private List<Item> wishList;
@@ -25,7 +24,7 @@ public class User implements Serializable {
 		this.wishList = new ArrayList<>();
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String address, Double currency, UserType userType,
+	public User(String username, String firstName, String lastName, String email, String address, Double currency,
 			String currentShop, List<Item> shoppingCart, List<Item> wishList) {
 		this();
 		this.username = username;
@@ -34,13 +33,12 @@ public class User implements Serializable {
 		this.email = email;
 		this.address = address;
 		this.currency = currency;
-		this.userType = userType;
 		this.currentShop = currentShop;
 		this.shoppingCart = shoppingCart;
 		this.wishList = wishList;
 	}
 	
-	public User(String username, String firstName, String lastName, String email, String address, Double currency, UserType userType) {
+	public User(String username, String firstName, String lastName, String email, String address, Double currency) {
 		this();
 		this.username = username;
 		this.firstName = firstName;
@@ -48,7 +46,6 @@ public class User implements Serializable {
 		this.email = email;
 		this.address = address;
 		this.currency = currency;
-		this.userType = userType;
 		
 	}
 
@@ -99,14 +96,6 @@ public class User implements Serializable {
 	public void setCurrency(Double currency) {
 		this.currency = currency;
 	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
 	
 	public String getCurrentShop() {
 		return currentShop;
@@ -150,7 +139,6 @@ public class User implements Serializable {
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((shoppingCart == null) ? 0 : shoppingCart.hashCode());
-		result = prime * result + ((userType == null) ? 0 : userType.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		result = prime * result + ((wishList == null) ? 0 : wishList.hashCode());
 		return result;
@@ -200,8 +188,6 @@ public class User implements Serializable {
 				return false;
 		} else if (!shoppingCart.equals(other.shoppingCart))
 			return false;
-		if (userType != other.userType)
-			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -218,8 +204,8 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", address=" + address + ", currency=" + currency + ", userType=" + userType + ", currentShop="
-				+ currentShop + ", shoppingCart=" + shoppingCart + ", wishList=" + wishList + "]";
+				+ ", address=" + address + ", currency=" + currency + ", currentShop=" + currentShop + ", shoppingCart="
+				+ shoppingCart + ", wishList=" + wishList + "]";
 	}
 	
 	

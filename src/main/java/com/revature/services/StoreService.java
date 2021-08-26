@@ -14,4 +14,6 @@ public interface StoreService {
 	void deleteItem(Item item);
 
 	Mono<Store> register(String name, String owner, Double currency);
+
+	Boolean checkAvailability(String name);
 }

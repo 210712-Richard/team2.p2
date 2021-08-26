@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
@@ -18,8 +19,11 @@ public class StoreDTO {
 			type=PrimaryKeyType.PARTITIONED
 			)
 	private String name;
+	@Column
 	private List<UUID> inventory;
+	@Column
 	private String owner;
+	@Column
 	private Double currency;
 	
 	public StoreDTO() {

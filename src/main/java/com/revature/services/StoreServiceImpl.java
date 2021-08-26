@@ -51,6 +51,11 @@ public class StoreServiceImpl implements StoreService{
 		store.setInventory(new ArrayList<>());
 		return storeDao.save(new StoreDTO(store)).map(s -> s.getStore());
 	}
+
+	@Override
+	public Boolean checkAvailability(String name) {
+		return true;
+	}
 	
 	
 }

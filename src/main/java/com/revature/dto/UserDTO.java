@@ -10,7 +10,6 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import com.revature.beans.User;
-import com.revature.beans.UserType;
 
 @Table("user")
 public class UserDTO {
@@ -25,7 +24,6 @@ public class UserDTO {
 	private String email;
 	private String address;
 	private Double currency;
-	private UserType userType;
 	@Column("currentShop")
 	private String currentShop;
 	@Column("shoppingCart")
@@ -44,7 +42,6 @@ public class UserDTO {
 		this.email = user.getEmail();
 		this.address = user.getAddress();
 		this.currency = user.getCurrency();
-		this.userType = user.getUserType();
 		this.currentShop = user.getCurrentShop();
 		this.shoppingCart = new ArrayList<>();
 		user.getShoppingCart().stream().forEach(item -> this.shoppingCart.add(item.getUuid()));
@@ -108,15 +105,7 @@ public class UserDTO {
 	public void setCurrency(Double currency) {
 		this.currency = currency;
 	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
-
+	
 	public List<UUID> getShoppingCart() {
 		if(shoppingCart == null) {
 			shoppingCart = new ArrayList<>();
@@ -142,8 +131,7 @@ public class UserDTO {
 	
 	public User getUser() {
 		User u = new User(this.username, this.firstName, this.lastName, this.email, 
-				this.address, this.currency, this.userType );
-		u.setUserType(this.userType);
+				this.address, this.currency );
 		return u;
 	}
 
@@ -158,7 +146,6 @@ public class UserDTO {
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((shoppingCart == null) ? 0 : shoppingCart.hashCode());
-		result = prime * result + ((userType == null) ? 0 : userType.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		result = prime * result + ((wishList == null) ? 0 : wishList.hashCode());
 		return result;
@@ -208,8 +195,6 @@ public class UserDTO {
 				return false;
 		} else if (!shoppingCart.equals(other.shoppingCart))
 			return false;
-		if (userType != other.userType)
-			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -226,8 +211,8 @@ public class UserDTO {
 	@Override
 	public String toString() {
 		return "UserDTO [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
-				+ email + ", address=" + address + ", currency=" + currency + ", userType=" + userType
-				+ ", currentShop=" + currentShop + ", shoppingCart=" + shoppingCart + ", wishList=" + wishList + "]";
+				+ email + ", address=" + address + ", currency=" + currency + ", currentShop=" + currentShop
+				+ ", shoppingCart=" + shoppingCart + ", wishList=" + wishList + "]";
 	}
 	
 
