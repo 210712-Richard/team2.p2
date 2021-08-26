@@ -20,6 +20,7 @@ import com.revature.beans.UserType;
 import com.revature.services.ItemService;
 import com.revature.services.UserService;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
@@ -38,6 +39,7 @@ public class UserController {
 		return ResponseEntity.status(200).contentType(MediaType.TEXT_HTML).body("<p>Hello</p>");
 	}
 	
+	// As a User I can create an account
 	@PostMapping(value="{username}", produces=MediaType.APPLICATION_JSON_VALUE)
 	public Mono<ResponseEntity<User>> register(@RequestBody User user, @PathVariable("username") String name){
 		
@@ -49,6 +51,7 @@ public class UserController {
 				if(user.getStoreName().isEmpty()) {
 					return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());
 				}
+				// If userType is SELLER, need to register their store with the database
 			} else {
 				user.setUserType(UserType.CUSTOMER);
 				user.setStoreName("NoStore");
@@ -56,7 +59,7 @@ public class UserController {
 			
 			// call register method
 			return userService.register(name, user.getUserType(), user.getFirstName(), user.getLastName(), 
-					user.getEmail(), user.getAddress(), user.getStoreName()).map(u -> ResponseEntity.ok(u));
+					user.getEmail(), user.getAddress(), user.getCurrency(), user.getStoreName()).map(u -> ResponseEntity.ok(u));
 			
 		} else {
 			// if availability returns false
@@ -90,9 +93,8 @@ public class UserController {
 	}
 	
 	// As a User I can add items to my ShoppingCart
-	             // users/{username}/shoppingCart
 	@PostMapping("{username}/shoppingCart")
-	public ResponseEntity<List<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+	public ResponseEntity<Flux<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
 		
 		User loggedUser = (User) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
@@ -105,7 +107,7 @@ public class UserController {
 		loggedUser.getShoppingCart().add(item);
 		userService.updateUser(loggedUser);
 		
-		return ResponseEntity.ok(loggedUser.getShoppingCart());
+		return ResponseEntity.ok(userService.viewShoppingCart(username));
 	}
 	
 	

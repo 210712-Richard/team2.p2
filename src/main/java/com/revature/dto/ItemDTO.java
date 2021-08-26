@@ -160,5 +160,25 @@ public class ItemDTO {
 				+ ", category=" + category + ", picture=" + picture + "]";
 	}
 	
+	public Object getStore() {
+        ReactiveItemDao itemDao;
+        Store store = new Store();
+        store.setName(this.name);
+        store.setOwner(this.owner);
+        // get by this.name And uuid provided
+        // for loop of size of list?
+        List<UUID> list = this.inventory;
+        List<Item> listItem;
+        for(Integer i = 0; i<list.size(); i++) {
+            Item item;
+            Mono<ItemDTO> itemDTO;
+            itemDTO = itemDao.findByStorenameAndUuid(store.getName(), list.get(i));
+            item = itemDTO.map(item2 -> item2.getItem());
+            listItem.add(item);
 
+        }
+        store.setInventory(listItem);
+                // itemDao.findByStorenameAndUuid(this.name,
+        return store;
+    }
 }
