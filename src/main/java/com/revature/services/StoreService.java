@@ -15,5 +15,8 @@ public interface StoreService {
 
 	Mono<Store> register(String name, String owner, Double currency);
 
+	Mono<Store> login(String username);
+	
 	Boolean checkAvailability(String name);
+	
 }

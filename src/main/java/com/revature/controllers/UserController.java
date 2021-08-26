@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,6 @@ import org.springframework.web.server.WebSession;
 
 import com.revature.beans.Item;
 import com.revature.beans.User;
-import com.revature.beans.UserType;
 import com.revature.services.ItemService;
 import com.revature.services.StoreService;
 import com.revature.services.UserService;
@@ -32,8 +33,6 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private ItemService itemService;
-	@Autowired
-	private StoreService storeService;
 	
 	// test connection to localhost
 	@GetMapping("/hello")
@@ -66,25 +65,24 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	// As a User I can login
 	@PostMapping
-	public Mono<ResponseEntity<User>> login(@RequestBody User user, WebSession session) {
-		if (user == null) {
-			return Mono.just(ResponseEntity.badRequest().build());
-		}
-		return userService.login(user.getUsername()).single().map(u -> {
-			if (u.getUsername() == null) {
-				return ResponseEntity.notFound().build();
-			}else {
-				session.getAttributes().put(SessionFields.LOGGED_USER, u);
-				return ResponseEntity.ok(u);
+	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
+		
+		Mono<User> loggedUser = userService.login(u.getUsername());
+		
+		if(loggedUser == null) {
+			return ResponseEntity.status(401).build();
 			}
-		});
+		
+		session.getAttributes().put("loggedUser", u);
+		return ResponseEntity.ok(loggedUser);
 	}
 	
 	
 	// As a User I can add items to my ShoppingCart
 	@PostMapping("{username}/shoppingCart")
-	public ResponseEntity<Flux<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+	public ResponseEntity<Flux<Item>> addToCart(@RequestBody UUID itemId, @PathVariable("username") String username, WebSession session){
 		
 		User loggedUser = (User) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
@@ -94,8 +92,9 @@ public class UserController {
 			return ResponseEntity.status(403).build();
 		}
 		
-		loggedUser.getShoppingCart().add(item);
-		userService.updateUser(loggedUser);
+		Mono<User> user = userService.addToCart(username, itemId);
+		
+		//userService.updateUser(user);
 		
 		return ResponseEntity.ok(userService.viewShoppingCart(username));
 	}
