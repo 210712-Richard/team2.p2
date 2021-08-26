@@ -3,6 +3,7 @@ package com.revature.controllers;
 import java.time.Duration;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +28,9 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/store")
 public class StoreController {
-
+	@Autowired
 	private StoreService storeService;
+	@Autowired
 	private ItemService itemService;
 
 	// As a Seller I can create an item
@@ -38,12 +40,13 @@ public class StoreController {
 		if(item==null)
 			return Mono.just(ResponseEntity.status(404).build());
 		User loggedUser = (User) session.getAttribute(SessionFields.LOGGED_USER);
-
+		System.out.print(loggedUser.toString());
 		// Check if user is not empty or user is not a CUSTOMER
 		if (loggedUser == null || !UserType.SELLER.equals(loggedUser.getUserType())) {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
 		// If Seller, then proceed
+		System.out.println(item.toString());
 		return Mono.just(itemService.createItem(UUID.randomUUID(), item.getName(), item.getStorename(), item.getPrice(),
 				item.getCategory())).map(i -> {
 					if (i == null) {
