@@ -25,4 +25,6 @@ public interface UserService {
 
 	Mono<User> addToCart(String username, UUID itemId);
 
+	Mono<User> addToWishlist(String username, UUID itemId);
+
 }

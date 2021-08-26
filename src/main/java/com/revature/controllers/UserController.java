@@ -97,6 +97,25 @@ public class UserController {
 		return ResponseEntity.ok(userService.viewShoppingCart(username));
 	}
 	
+	// As a User I can add items to my ShoppingCart
+	@PostMapping("{username}/wishlist")
+	public ResponseEntity<Flux<Item>> addToWishlist(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+		
+		User loggedUser = (User) session.getAttribute("loggedUser");
+		if(loggedUser == null) {
+			return ResponseEntity.status(401).build();
+		}
+		if(!loggedUser.getUsername().equals(username)) {
+			return ResponseEntity.status(403).build();
+		}
+		
+		UUID itemId = item.getUuid();
+		
+		Mono<User> user = userService.addToWishlist(username, itemId);
+		
+		return ResponseEntity.ok(userService.viewShoppingCart(username));
+	}
+	
 	
 	
 	

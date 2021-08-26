@@ -72,14 +72,6 @@ private static final Logger log = LogManager.getLogger(CassandraUtil.class);
 		return new CassandraTemplate(sessionFactory, converter);
 	}
 	
-	// get rid of some of the warns at start up
-	@Bean
-	public static MetricsRepositoryMethodInvocationListener metricsRepositoryMethodInvocationListener(MetricsProperties
-	        metricsProperties, @Lazy MeterRegistry registry, RepositoryTagsProvider tagsProvider) {
-	    Repository properties = metricsProperties.getData().getRepository();
-	    return new MetricsRepositoryMethodInvocationListener(registry, tagsProvider, properties.getMetricName(), 
-	        properties.getAutotime());
-	}
 	
 
 }

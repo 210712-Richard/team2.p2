@@ -26,9 +26,10 @@ public class UserServiceImpl implements UserService {
 	private ReactiveItemDao itemDao;
 	
 	@Autowired
-	public UserServiceImpl(ReactiveUserDao userDao) {
+	public UserServiceImpl(ReactiveUserDao userDao, ReactiveItemDao itemDao) {
 		super();
 		this.userDao = userDao;
+		this.itemDao = itemDao;
 	}
 	
 	@Override
@@ -90,7 +91,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Boolean checkAvailability(String newName) {
 		// currently doesn't work
-		// get rid of some of the warns at start up
 		return true;
 		
 	}
@@ -156,6 +156,44 @@ public class UserServiceImpl implements UserService {
 				.flatMap(uuid -> itemDao.findByUuid(uuid))
 				.map(itemDto -> itemDto.getItem());
 		return wishList;
+	}
+
+	@Override
+	public Mono<User> addToWishlist(String username, UUID itemId) {
+
+		// get user and item from db
+		Mono<User> userMono = userDao.findByUsername(username).map(userDto -> userDto.getUser());
+		Mono<Item> itemMono = itemDao.findByUuid(itemId).map(itemDto -> itemDto.getItem());
+		
+		// get user's wishlist
+		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
+				.map(userDto -> userDto.getWishList())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		// change mono of wishlist to actual list
+		Mono<Tuple2<List<Item>,Item>> itemAndWishlist = wishList.zipWith(itemMono);
+		Mono<List<Item>> wishlist = itemAndWishlist.map(tuple -> {
+			Item item = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			// add item to wishlist
+			items.add(item);
+			return items;
+		});
+		
+		// change mono of user to actual user
+		Mono<Tuple2<List<Item>,User>> userAndWishlist = wishlist.zipWith(userMono);
+		Mono<User> user = userAndWishlist.map(tuple -> {
+			User userWish = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			userWish.setWishList(items);
+			return userWish;
+		});
+		
+		return user;
+		
 	}
 
 }
