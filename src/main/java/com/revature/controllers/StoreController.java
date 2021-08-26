@@ -5,6 +5,7 @@ import java.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,6 +88,12 @@ public class StoreController {
 		
 		session.getAttributes().put("loggedStore", store);
 		return ResponseEntity.ok(loggedStore);
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<Void> logout(WebSession session){
+		session.invalidate();
+		return ResponseEntity.noContent().build();
 	}
 	
 	// As a User I can create an account

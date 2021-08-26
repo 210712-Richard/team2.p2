@@ -8,9 +8,7 @@ function fn() {
 	var config = {
 		// all have http://localhost:8080
 		loginUrl: 'http://localhost:8080/users'
-		// khine url
-		// ivan url
-		// registerUrl: 'http://localhost:8080/users' // not using because there's input in the url
+		
 	}
 	
 	// don't waste time waiting for a server I didn't start
