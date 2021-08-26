@@ -23,7 +23,6 @@ public class User implements Serializable {
 		super();
 		this.shoppingCart = new ArrayList<>();
 		this.wishList = new ArrayList<>();
-		this.currency = 0d;
 	}
 	
 	public User(String username, String firstName, String lastName, String email, String address, Double currency, UserType userType,
