@@ -11,7 +11,6 @@ import com.revature.beans.Item;
 import com.revature.beans.ItemType;
 import com.revature.data.ReactiveItemDao;
 import com.revature.dto.ItemDTO;
-import com.revature.dto.UserDTO;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

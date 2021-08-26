@@ -35,10 +35,11 @@ public class StoreController {
 	@PostMapping
 	public Mono<ResponseEntity<Object>> createItem(@RequestBody Item item, WebSession session) {
 
+		if(item==null)
+			return Mono.just(ResponseEntity.status(404).build());
 		User loggedUser = (User) session.getAttribute(SessionFields.LOGGED_USER);
-		System.out.println(loggedUser.toString());
 
-		// Implement login service
+		// Check if user is not empty or user is not a CUSTOMER
 		if (loggedUser == null || !UserType.SELLER.equals(loggedUser.getUserType())) {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
