@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.time.Duration;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,9 @@ import org.springframework.web.server.WebSession;
 import com.revature.beans.Item;
 import com.revature.beans.User;
 import com.revature.beans.UserType;
+import com.revature.services.ItemService;
 import com.revature.services.StoreService;
+import com.revature.util.SessionFields;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,24 +29,28 @@ import reactor.core.publisher.Mono;
 public class StoreController {
 
 	private StoreService storeService;
+	private ItemService itemService;
 
 	// As a Seller I can create an item
 	@PostMapping
 	public Mono<ResponseEntity<Object>> createItem(@RequestBody Item item, WebSession session) {
 
-		// Check for Seller authentication
-		User loggedUser = (User) session.getAttribute("loggedUser");
+		User loggedUser = (User) session.getAttribute(SessionFields.LOGGED_USER);
+		System.out.println(loggedUser.toString());
+
+		// Implement login service
 		if (loggedUser == null || !UserType.SELLER.equals(loggedUser.getUserType())) {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
 		// If Seller, then proceed
-		return Mono.just(storeService.createItem(item)).map(i -> {
-			if (i == null) {
-				return ResponseEntity.status(409).build();
-			} else {
-				return ResponseEntity.ok(i);
-			}
-		});
+		return Mono.just(itemService.createItem(UUID.randomUUID(), item.getName(), item.getStorename(), item.getPrice(),
+				item.getCategory())).map(i -> {
+					if (i == null) {
+						return ResponseEntity.status(409).build();
+					} else {
+						return ResponseEntity.ok(i);
+					}
+				});
 	}
 
 	// Listing items by Store
@@ -59,7 +66,7 @@ public class StoreController {
 		if (loggedUser == null || !UserType.SELLER.equals(loggedUser.getUserType())) {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
-		//If Seller, then proceed to delete
+		// If Seller, then proceed to delete
 		storeService.deleteItem(item);
 		return Mono.just(ResponseEntity.status(201).build());
 	}

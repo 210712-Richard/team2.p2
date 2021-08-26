@@ -18,6 +18,7 @@ import com.revature.beans.UserType;
 import com.revature.services.ItemService;
 import com.revature.services.StoreService;
 import com.revature.services.UserService;
+import com.revature.util.SessionFields;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -74,7 +75,7 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	
+	/*
 	// As a User I can login
 	@PostMapping   //  /users
 	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
@@ -88,6 +89,23 @@ public class UserController {
 		session.getAttributes().put("loggedUser", u);
 		return ResponseEntity.ok(loggedUser);
 	}
+	*/
+	
+	@PostMapping
+	public Mono<ResponseEntity<User>> login(@RequestBody User user, WebSession session) {
+		if (user == null) {
+			return Mono.just(ResponseEntity.badRequest().build());
+		}
+		return userService.login(user.getUsername()).single().map(u -> {
+			if (u.getUsername() == null) {
+				return ResponseEntity.notFound().build();
+			}else {
+				session.getAttributes().put(SessionFields.LOGGED_USER, u);
+				return ResponseEntity.ok(u);
+			}
+		});
+	}
+	
 	
 	// As a User I can add items to my ShoppingCart
 	@PostMapping("{username}/shoppingCart")
