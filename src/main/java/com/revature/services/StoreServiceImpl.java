@@ -23,9 +23,10 @@ public class StoreServiceImpl implements StoreService{
 	private ReactiveStoreDao storeDao;
 	
 	@Autowired
-	public StoreServiceImpl(ReactiveItemDao itemDao) {
+	public StoreServiceImpl(ReactiveItemDao itemDao, ReactiveStoreDao storeDao) {
 		super();
 		this.itemDao = itemDao;
+		this.storeDao = storeDao;
 	}
 	
 	@Override

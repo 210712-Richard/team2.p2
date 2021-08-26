@@ -4,20 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import com.revature.beans.Store;
 
 @Table("store")
 public class StoreDTO {
-	@PrimaryKeyColumn(
-			name="name",
-			ordinal=0,
-			type=PrimaryKeyType.PARTITIONED
-			)
+	@PrimaryKey
+	@Column("name")
 	private String name;
 	@Column
 	private List<UUID> inventory;
