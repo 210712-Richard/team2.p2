@@ -17,7 +17,7 @@ public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, St
 	Flux<ItemDTO> findByStorename(String storeName);
 	Mono<ItemDTO> findByStorenameAndUuid(String storeName, UUID uuid);
 	
-	Flux<ItemDTO> findByPrice(Double price);
+	
 	//take the whole query and filter what you want
 	@AllowFiltering
 	@Query("SELECT * from item where uuid = ?0")

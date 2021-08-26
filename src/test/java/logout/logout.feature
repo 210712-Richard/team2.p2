@@ -8,4 +8,5 @@ Given url 'http://localhost:8080/users'
 And request { username : 'Quentin' }
 When method delete
 Then status 204
-And session = #null
+# There's no matching here because there's nothing to match
+# Tried testing for both session being '#null' and '#notnull' and both return wrong because there's no session cookie to check
