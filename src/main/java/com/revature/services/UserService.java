@@ -1,5 +1,7 @@
 package com.revature.services;
 
+import java.util.UUID;
+
 import com.revature.beans.Item;
 import com.revature.beans.User;
 
@@ -17,10 +19,10 @@ public interface UserService {
 
 	void updateUser(User user);
 
-	Mono<Item> addToCart(Item item);
-
 	Flux<Item> viewShoppingCart(String username);
 
 	Flux<Item> viewWishList(String username);
+
+	Mono<User> addToCart(String username, UUID itemId);
 
 }

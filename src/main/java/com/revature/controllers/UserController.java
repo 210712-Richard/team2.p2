@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -91,7 +93,7 @@ public class UserController {
 	
 	// As a User I can add items to my ShoppingCart
 	@PostMapping("{username}/shoppingCart")
-	public ResponseEntity<Flux<Item>> addToCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+	public ResponseEntity<Flux<Item>> addToCart(@RequestBody UUID itemId, @PathVariable("username") String username, WebSession session){
 		
 		User loggedUser = (User) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
@@ -101,7 +103,8 @@ public class UserController {
 			return ResponseEntity.status(403).build();
 		}
 		
-		loggedUser.getShoppingCart().add(item);
+		Mono<User> user = userService.addToCart(username, itemId);
+		
 		userService.updateUser(loggedUser);
 		
 		return ResponseEntity.ok(userService.viewShoppingCart(username));
