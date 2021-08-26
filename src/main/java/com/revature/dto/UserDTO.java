@@ -32,7 +32,6 @@ public class UserDTO {
 	private List<UUID> shoppingCart;
 	@Column("wishList")
 	private List<UUID> wishList;
-	private String storeName;
 	
 	public UserDTO() {
 		
@@ -51,7 +50,6 @@ public class UserDTO {
 		user.getShoppingCart().stream().forEach(item -> this.shoppingCart.add(item.getUuid()));
 		this.wishList = new ArrayList<>();
 		user.getWishList().stream().forEach(item-> this.wishList.add(item.getUuid()));
-		this.storeName = user.getStoreName();
 	}
 	
 
@@ -141,17 +139,10 @@ public class UserDTO {
 		this.wishList = wishList;
 	}
 
-	public String getStoreName() {
-		return storeName;
-	}
-
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
-	}
 	
 	public User getUser() {
 		User u = new User(this.username, this.firstName, this.lastName, this.email, 
-				this.address, this.currency, this.userType, this.storeName );
+				this.address, this.currency, this.userType );
 		u.setUserType(this.userType);
 		return u;
 	}
@@ -167,7 +158,6 @@ public class UserDTO {
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((shoppingCart == null) ? 0 : shoppingCart.hashCode());
-		result = prime * result + ((storeName == null) ? 0 : storeName.hashCode());
 		result = prime * result + ((userType == null) ? 0 : userType.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		result = prime * result + ((wishList == null) ? 0 : wishList.hashCode());
@@ -218,11 +208,6 @@ public class UserDTO {
 				return false;
 		} else if (!shoppingCart.equals(other.shoppingCart))
 			return false;
-		if (storeName == null) {
-			if (other.storeName != null)
-				return false;
-		} else if (!storeName.equals(other.storeName))
-			return false;
 		if (userType != other.userType)
 			return false;
 		if (username == null) {
@@ -242,8 +227,7 @@ public class UserDTO {
 	public String toString() {
 		return "UserDTO [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
 				+ email + ", address=" + address + ", currency=" + currency + ", userType=" + userType
-				+ ", currentShop=" + currentShop + ", shoppingCart=" + shoppingCart + ", wishList=" + wishList
-				+ ", storeName=" + storeName + "]";
+				+ ", currentShop=" + currentShop + ", shoppingCart=" + shoppingCart + ", wishList=" + wishList + "]";
 	}
 	
 

@@ -24,7 +24,7 @@ public class ItemDTO {
 			ordinal=0,
 			type=PrimaryKeyType.PARTITIONED
 			)
-	private String storeName;
+	private String storename;
 	private Double price;
 	private ItemType category;
 	private String picture;
@@ -36,7 +36,7 @@ public class ItemDTO {
 	public ItemDTO(Item item) {
 		this.uuid = item.getUuid();
 		this.name = item.getName();
-		this.storeName = item.getStoreName();
+		this.storename = item.getStorename();
 		this.price = item.getPrice();
 		this.category = item.getCategory();
 		this.picture = item.getPicture();
@@ -46,7 +46,7 @@ public class ItemDTO {
 		Item i = new Item();
 		i.setUuid(this.uuid);
 		i.setName(this.name);
-		i.setStoreName(this.storeName);
+		i.setStorename(this.storename);
 		i.setPrice(this.price);
 		i.setCategory(this.category);
 		i.setPicture(this.picture);
@@ -70,12 +70,12 @@ public class ItemDTO {
 		this.name = name;
 	}
 
-	public String getStoreName() {
-		return storeName;
+	public String getStorename() {
+		return storename;
 	}
 
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
+	public void setStorename(String storename) {
+		this.storename = storename;
 	}
 
 	public Double getPrice() {
@@ -110,7 +110,7 @@ public class ItemDTO {
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((picture == null) ? 0 : picture.hashCode());
 		result = prime * result + ((price == null) ? 0 : price.hashCode());
-		result = prime * result + ((storeName == null) ? 0 : storeName.hashCode());
+		result = prime * result + ((storename == null) ? 0 : storename.hashCode());
 		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
 		return result;
 	}
@@ -141,10 +141,10 @@ public class ItemDTO {
 				return false;
 		} else if (!price.equals(other.price))
 			return false;
-		if (storeName == null) {
-			if (other.storeName != null)
+		if (storename == null) {
+			if (other.storename != null)
 				return false;
-		} else if (!storeName.equals(other.storeName))
+		} else if (!storename.equals(other.storename))
 			return false;
 		if (uuid == null) {
 			if (other.uuid != null)
@@ -156,7 +156,7 @@ public class ItemDTO {
 
 	@Override
 	public String toString() {
-		return "ItemDTO [uuid=" + uuid + ", name=" + name + ", storeName=" + storeName + ", price=" + price
+		return "ItemDTO [uuid=" + uuid + ", name=" + name + ", storename=" + storename + ", price=" + price
 				+ ", category=" + category + ", picture=" + picture + "]";
 	}
 	
