@@ -1,6 +1,5 @@
 package com.revature.dto;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -9,7 +8,6 @@ import org.springframework.data.cassandra.core.mapping.Table;
 
 import com.revature.beans.Item;
 import com.revature.beans.ItemType;
-import com.revature.beans.Store;
 
 @Table("item")
 public class ItemDTO {
