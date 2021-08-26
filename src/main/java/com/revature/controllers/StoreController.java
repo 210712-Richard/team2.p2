@@ -73,19 +73,17 @@ public class StoreController {
 		return Mono.just(ResponseEntity.status(201).build());
 	}
 	
-	// As a Seller, I can log in
+	// As a Seller I can login
 	@PostMapping
-	public Mono<ResponseEntity<Store>> login(@RequestBody Store store, WebSession session) {
-		if (store == null) {
-			return Mono.just(ResponseEntity.badRequest().build());
-		}
-		return storeService.login(store.getName()).single().map(u -> {
-			if (store.getName() == null) {
-				return ResponseEntity.notFound().build();
-			}else {
-				session.getAttributes().put(SessionFields.LOGGED_USER, store);
-				return ResponseEntity.ok(store);
+	public ResponseEntity<Mono<Store>> login(@RequestBody Store store, WebSession session){
+		
+		Mono<Store> loggedStore = storeService.login(store.getName());
+		
+		if(loggedStore == null) {
+			return ResponseEntity.status(401).build();
 			}
-		});
+		
+		session.getAttributes().put("loggedStore", store);
+		return ResponseEntity.ok(loggedStore);
 	}
 }

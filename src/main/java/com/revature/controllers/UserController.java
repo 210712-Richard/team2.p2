@@ -77,20 +77,18 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	// As a User I can log in
+	// As a User I can login
 	@PostMapping
-	public Mono<ResponseEntity<User>> login(@RequestBody User user, WebSession session) {
-		if (user == null) {
-			return Mono.just(ResponseEntity.badRequest().build());
-		}
-		return userService.login(user.getUsername()).single().map(u -> {
-			if (u.getUsername() == null) {
-				return ResponseEntity.notFound().build();
-			}else {
-				session.getAttributes().put(SessionFields.LOGGED_USER, u);
-				return ResponseEntity.ok(u);
+	public ResponseEntity<Mono<User>> login(@RequestBody User u, WebSession session){
+		
+		Mono<User> loggedUser = userService.login(u.getUsername());
+		
+		if(loggedUser == null) {
+			return ResponseEntity.status(401).build();
 			}
-		});
+		
+		session.getAttributes().put("loggedUser", u);
+		return ResponseEntity.ok(loggedUser);
 	}
 	
 	
@@ -108,7 +106,7 @@ public class UserController {
 		
 		Mono<User> user = userService.addToCart(username, itemId);
 		
-		userService.updateUser(loggedUser);
+		//userService.updateUser(user);
 		
 		return ResponseEntity.ok(userService.viewShoppingCart(username));
 	}
