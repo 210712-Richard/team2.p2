@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,9 +72,10 @@ public class UserController {
 		
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
-			}
-		
-		session.getAttributes().put("loggedUser", u);
+		}
+		if(session.getAttribute("loggedUser") == null) {
+			session.getAttributes().put("loggedUser", u.getUsername());
+		}
 		return ResponseEntity.ok(loggedUser);
 	}
 	
@@ -82,11 +84,11 @@ public class UserController {
 	@PostMapping("{username}/shoppingCart")
 	public ResponseEntity<Flux<Item>> addToCart(@RequestBody UUID itemId, @PathVariable("username") String username, WebSession session){
 		
-		User loggedUser = (User) session.getAttribute("loggedUser");
+		String loggedUser = (String) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
 		}
-		if(!loggedUser.getUsername().equals(username)) {
+		if(!loggedUser.equals(username)) {
 			return ResponseEntity.status(403).build();
 		}
 		
@@ -99,21 +101,19 @@ public class UserController {
 	
 	// As a User I can add items to my ShoppingCart
 	@PostMapping("{username}/wishlist")
-	public ResponseEntity<Flux<Item>> addToWishlist(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
+	public ResponseEntity<Mono<List<Item>>> addToWishlist(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
 		
-		User loggedUser = (User) session.getAttribute("loggedUser");
+		String loggedUser = (String) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
 		}
-		if(!loggedUser.getUsername().equals(username)) {
+		if(!loggedUser.equals(username)) {
 			return ResponseEntity.status(403).build();
 		}
 		
 		UUID itemId = item.getUuid();
 		
-		Mono<User> user = userService.addToWishlist(username, itemId);
-		
-		return ResponseEntity.ok(userService.viewShoppingCart(username));
+		return ResponseEntity.ok( userService.addToWishlist(username, itemId).map(u -> u.getWishList()));
 	}
 	
 	

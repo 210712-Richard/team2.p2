@@ -20,7 +20,6 @@ public interface ReactiveItemDao extends ReactiveCassandraRepository<ItemDTO, St
 	
 	//take the whole query and filter what you want
 	@AllowFiltering
-	@Query("SELECT * from item where uuid = ?0")
 	Mono<ItemDTO> findByUuid(UUID id);
 
 	
