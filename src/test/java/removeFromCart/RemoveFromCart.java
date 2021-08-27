@@ -1,11 +1,11 @@
-package removeFromShoppingCart;
+package removeFromCart;
 
 import com.intuit.karate.junit5.Karate;
 
-public class RemoveFromShoppingCart {
+public class RemoveFromCart {
 	@Karate.Test
 	Karate testBrowseAll() {
-		return Karate.run("removeFromShoppingCart").relativeTo(getClass());
+		return Karate.run("removeFromCart").relativeTo(getClass());
 	}
 
 }
