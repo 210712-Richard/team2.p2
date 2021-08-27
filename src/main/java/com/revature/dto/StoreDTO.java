@@ -69,6 +69,13 @@ public class StoreDTO {
 		this.currency = currency;
 	}
 
+	
+
+	public Store getStore() {
+		Store store = new Store(this.name, this.owner, this.currency);
+		return store;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -119,16 +126,6 @@ public class StoreDTO {
 	}
 
 	
-	public Store getStore() {
-		Store store = new Store();
-		store.setName(this.name);
-		store.setOwner(this.owner);
-		// get by this.name And uuid provided
-		// for loop of size of list?
-		store.setInventory(new ArrayList<>());
-		store.setCurrency(this.currency);
-		return store;
-	}
 	
 	
 

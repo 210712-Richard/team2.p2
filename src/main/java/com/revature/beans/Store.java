@@ -13,12 +13,20 @@ public class Store implements Serializable {
 	
 	public Store() {
 		super();
+		this.inventory = new ArrayList<>();
 	}
 	
 	public Store(String name, List<Item> inventory, String owner, Double currency) {
 		this();
 		this.name = name;
 		this.inventory = inventory;
+		this.owner = owner;
+		this.currency = currency;
+	}
+	
+	public Store(String name, String owner, Double currency) {
+		this();
+		this.name = name;
 		this.owner = owner;
 		this.currency = currency;
 	}
