@@ -1,6 +1,5 @@
 package com.revature.services;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.revature.beans.Item;
@@ -13,7 +12,7 @@ import reactor.core.publisher.Mono;
 public interface ItemService {
 	Flux<Item> getAllItems();
 	
-	List<ItemDTO> getItemsByPrice(Double price);
+	Flux<ItemDTO> getItemsByPrice(Double price);
 	
 	Mono<Item> createItem(UUID id, String name, String storename, Double price, ItemType category);
 }
