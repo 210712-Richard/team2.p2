@@ -1,9 +1,9 @@
 package com.revature.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import com.revature.beans.Item;
 import com.revature.beans.User;
 import com.revature.data.ReactiveItemDao;
 import com.revature.data.ReactiveUserDao;
+import com.revature.dto.ItemDTO;
 import com.revature.dto.UserDTO;
 
 import reactor.core.publisher.Flux;
@@ -193,7 +194,41 @@ public class UserServiceImpl implements UserService {
 				});
 	}
 	
+	//As a user, I can remove items from my wishlist
+//	@Override
+//	public Mono<User> removeFromWishlist(String username, UUID itemId) {		
+//		return userDao.findByUsername(username).flatMap(dto -> {
+//			List<UUID> list = dto.getWishList().stream().collect(Collectors.toList());
+//			list.removeIf(i -> i.equals(itemId));
+//			dto.setWishList(list);
+//			return userDao.save(dto);
+//		}).map(i -> i.getUser());
+//	}
+	@Override
+	public Mono<User> removeFromWishlist(String username, UUID itemId) {
+		//get user and update wishlist
+		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
+			List<UUID> list = new ArrayList<UUID>(user.getWishList());
+			//get index of item and remove it
+			list.remove(itemId);
+			user.setWishList(list);
+			return userDao.save(user);
+		}).map(user -> user.getUser());
+		
+		//get List
+		Mono<List<Item>> wishlist = Flux.from(userDao.findByUsername(username))
+				.map(userDto -> userDto.getShoppingCart())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		return wishlist.zipWith(userMono)
+				.map(tup -> {
+					User user = tup.getT2();
+					user.setWishList(tup.getT1());
+					return user;
+				});
+	}
 	
-
-
 }
