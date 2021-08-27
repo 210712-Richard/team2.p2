@@ -27,4 +27,5 @@ public interface UserService {
 
 	Mono<User> addToWishlist(String username, UUID itemId);
 
+	Mono<User> removeFromWishlist(String username, UUID itemId);
 }

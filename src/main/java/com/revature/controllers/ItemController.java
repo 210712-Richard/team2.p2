@@ -39,7 +39,7 @@ public class ItemController {
 	}
 	
 	//As a customer, I can get list of items sorted by price
-	@GetMapping("{username}/searchItem")
+	@GetMapping("{username}/price")
 	public ResponseEntity<Flux<ItemDTO>> getItemsByPrice(@RequestHeader(value="price") Double price, @PathVariable("username") String name, WebSession session) {		
 		String loggedUser = (String) session.getAttribute(SessionFields.LOGGED_USER);
 		if(loggedUser == null) {

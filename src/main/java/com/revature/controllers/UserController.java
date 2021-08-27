@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.WebSession;
@@ -99,7 +101,7 @@ public class UserController {
 		return ResponseEntity.ok(userService.viewShoppingCart(username));
 	}
 	
-	// As a User I can add items to my ShoppingCart
+	// As a User I can add items to my wishlist
 	@PostMapping("{username}/wishlist")
 	public ResponseEntity<Mono<List<Item>>> addToWishlist(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
 		
@@ -116,8 +118,24 @@ public class UserController {
 		return ResponseEntity.ok( userService.addToWishlist(username, itemId).map(u -> u.getWishList()));
 	}
 	
-	
-	
-	
+	//As a User, I can remove items from my wishlist
+	@PostMapping("{username}/wishlist/garbage")
+	public ResponseEntity<Mono<Item>> removeItemFromWishlist(@PathVariable("username") String username, @RequestBody Item item, WebSession session) {
+		String loggedUser = (String) session.getAttribute("loggedUser");
+		if(loggedUser == null) {
+			return ResponseEntity.status(401).build();
+		}
+		if(!loggedUser.equals(username)) {
+			return ResponseEntity.status(403).build();
+		}
+//		return userService.removeItemFromWishlist(username, id)
+//				.map(u -> ResponseEntity.ok(u))
+//				.defaultIfEmpty(ResponseEntity.status(404).build());
+		UUID id = item.getUuid();
+		return ResponseEntity.ok(userService.removeFromWishlist(username, id).map(i -> i.getWishList()));
+	}
 
+		
+	
 }
+
