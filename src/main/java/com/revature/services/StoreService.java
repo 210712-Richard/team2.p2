@@ -19,4 +19,6 @@ public interface StoreService {
 	
 	Boolean checkAvailability(String name);
 	
+	Item addItemToInventory(Store store);
+	
 }

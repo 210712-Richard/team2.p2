@@ -1,10 +1,12 @@
 package com.revature.controllers;
 
 import java.time.Duration;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,26 +31,30 @@ public class StoreController {
 	@Autowired
 	private ItemService itemService;
 
-	/*
+	
 	// As a Seller I can create an item
+	/*
 	@PostMapping
 	public Mono<ResponseEntity<Object>> createItem(@RequestBody Item item, WebSession session) {
 
 		if(item==null)
 			return Mono.just(ResponseEntity.status(404).build());
-		User loggedUser = (User) session.getAttribute(SessionFields.LOGGED_USER);
-		System.out.print(loggedUser.toString());
-		// Check if user is not empty or user is not a CUSTOMER
-		if (loggedUser == null || !UserType.SELLER.equals(loggedUser.getUserType())) {
+		Store loggedStore = (Store) session.getAttribute("loggedStore");
+		System.out.print(loggedStore.toString());
+		// Check if store is not empty 
+		if (loggedStore == null) {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
 		// If Seller, then proceed
-		System.out.println(item.toString());
+		
+		
+		
 		return Mono.just(itemService.createItem(UUID.randomUUID(), item.getName(), item.getStorename(), item.getPrice(),
 				item.getCategory())).map(i -> {
 					if (i == null) {
 						return ResponseEntity.status(409).build();
 					} else {
+						Item newItem = storeService.addItemToInventory(loggedStore);
 						return ResponseEntity.ok(i);
 					}
 				});
@@ -56,9 +62,9 @@ public class StoreController {
 	*/
 
 	// Listing items by Store
-	@GetMapping(value = "{storeName}/items", produces = MediaType.APPLICATION_NDJSON_VALUE)
-	public ResponseEntity<Flux<Item>> getItems(@PathVariable("storeName") String storeName) {
-		return ResponseEntity.ok(storeService.listItems(storeName).delayElements(Duration.ofSeconds(1)));
+	@GetMapping(value = "{storename}/items", produces = MediaType.APPLICATION_NDJSON_VALUE)
+	public ResponseEntity<Flux<Item>> getItems(@PathVariable("storename") String storename) {
+		return ResponseEntity.ok(storeService.listItems(storename).delayElements(Duration.ofSeconds(1)));
 	}
 
 	/*
@@ -87,6 +93,12 @@ public class StoreController {
 		
 		session.getAttributes().put("loggedStore", store);
 		return ResponseEntity.ok(loggedStore);
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<Void> logout(WebSession session){
+		session.invalidate();
+		return ResponseEntity.noContent().build();
 	}
 	
 	// As a User I can create an account
