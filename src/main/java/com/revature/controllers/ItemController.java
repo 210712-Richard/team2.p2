@@ -27,11 +27,11 @@ public class ItemController {
 	//As a customer, I can get the list of all available items.
 	@GetMapping(value = "{username}")
 	public ResponseEntity<Flux<Item>> getAllItems(@PathVariable("username") String name, WebSession session) {
-		User loggedUser = (User) session.getAttribute(SessionFields.LOGGED_USER);
+		String loggedUser = (String) session.getAttribute(SessionFields.LOGGED_USER);
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
 		}
-		if(!loggedUser.getUsername().equals(name)) {
+		if(!loggedUser.equals(name)) {
 			return ResponseEntity.status(403).build();
 		}
 				
@@ -41,11 +41,11 @@ public class ItemController {
 	//As a customer, I can get list of items sorted by price
 	@GetMapping("{username}/searchItem")
 	public ResponseEntity<Flux<ItemDTO>> getItemsByPrice(@RequestHeader(value="price") Double price, @PathVariable("username") String name, WebSession session) {		
-		User loggedUser = (User) session.getAttribute(SessionFields.LOGGED_USER);
+		String loggedUser = (String) session.getAttribute(SessionFields.LOGGED_USER);
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
 		}
-		if(!loggedUser.getUsername().equals(name)) {
+		if(!loggedUser.equals(name)) {
 			return ResponseEntity.status(403).build();
 		}
 		

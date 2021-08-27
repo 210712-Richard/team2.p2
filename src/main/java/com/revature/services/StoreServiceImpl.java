@@ -19,9 +19,8 @@ import reactor.util.function.Tuple2;
 
 @Service
 public class StoreServiceImpl implements StoreService{
-	@Autowired
+
 	private ReactiveItemDao itemDao;
-	@Autowired
 	private ReactiveStoreDao storeDao;
 	
 	@Autowired
