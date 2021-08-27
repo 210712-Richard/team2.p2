@@ -19,7 +19,9 @@ import reactor.util.function.Tuple2;
 
 @Service
 public class StoreServiceImpl implements StoreService{
+	@Autowired
 	private ReactiveItemDao itemDao;
+	@Autowired
 	private ReactiveStoreDao storeDao;
 	
 	@Autowired
@@ -80,5 +82,12 @@ public class StoreServiceImpl implements StoreService{
 		});
 		
 		return returnStore;
+	}
+
+	@Override
+	public Item addItemToInventory(Store store) {
+		//Obtain the object
+		//List<ItemDTO> items = itemDao.findByStorename(null);
+		return null;
 	}
 }
