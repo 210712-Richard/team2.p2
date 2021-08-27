@@ -206,21 +206,22 @@ public class UserServiceImpl implements UserService {
 	public Mono<User> removeFromWishlist(String username, UUID itemId) {
 		//get user and update wishlist
 		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
-			List<UUID> list = new ArrayList<UUID>(user.getWishList());
+			List<UUID> wishlist = new ArrayList<UUID>(user.getWishList());
 			//get index of item and remove it
-			list.remove(itemId);
-			user.setWishList(list);
+			wishlist.remove(itemId);
+			user.setWishList(wishlist);
 			return userDao.save(user);
 		}).map(user -> user.getUser());
 		
 		//get List
 		Mono<List<Item>> wishlist = Flux.from(userDao.findByUsername(username))
-				.map(userDto -> userDto.getShoppingCart())
+				.map(userDto -> userDto.getWishList())
 				.flatMap(listUuids -> Flux.fromIterable(listUuids))
 				.flatMap(uuid -> itemDao.findByUuid(uuid))
 				.map(itemDto -> itemDto.getItem())
 				.collectList();
 		
+		//return list
 		return wishlist.zipWith(userMono)
 				.map(tup -> {
 					User user = tup.getT2();

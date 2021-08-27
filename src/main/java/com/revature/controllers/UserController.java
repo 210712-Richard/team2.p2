@@ -160,7 +160,7 @@ public class UserController {
 		
 	//As a User, I can remove items from my wishlist
 	@PostMapping("{username}/wishlist/garbage")
-	public ResponseEntity<Mono<List<Item>>> removeItemFromWishlist(@PathVariable("username") String username, @RequestBody Item item, WebSession session) {
+	public ResponseEntity<Mono<List<Item>>> removeFromWishlist(@PathVariable("username") String username, @RequestBody Item item, WebSession session) {
 		String loggedUser = (String) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
@@ -169,7 +169,7 @@ public class UserController {
 			return ResponseEntity.status(403).build();
 		}
 		UUID id = item.getUuid();
-		return ResponseEntity.ok(userService.removeFromWishlist(username, id).map(i -> i.getWishList()));
+		return ResponseEntity.ok(userService.removeFromWishlist(username, id).map(u -> u.getWishList()));
 	}
 
 		
