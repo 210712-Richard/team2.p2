@@ -55,9 +55,6 @@ public class UserController {
 		
 	}
 	
-	
-	
-	
 	@DeleteMapping
 	public ResponseEntity<Void> logout(WebSession session){
 		session.invalidate();

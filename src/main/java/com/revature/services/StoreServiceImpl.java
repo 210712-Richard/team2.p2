@@ -80,15 +80,14 @@ public class StoreServiceImpl implements StoreService{
 	}
 	
 	@Override
-	public Mono<Item> createItem(UUID id, String name, String storename, Double price, ItemType category) {
+	public Mono<Item> createItem(String name, String storename, Double price, ItemType category) {
 		Item item = new Item();
-		item.setUuid(id);
+		item.setUuid(UUID.randomUUID());
 		item.setName(name);
 		item.setStorename(storename);
 		item.setPrice(price);
 		item.setCategory(category);
 		
-		addItemToInventory(storename,id);
 		
 		return itemDao.save(new ItemDTO(item)).map(i -> i.getItem());
 	}
@@ -99,21 +98,24 @@ public class StoreServiceImpl implements StoreService{
 	// condense two controllers down to just one "addItem" controller method
 	
 	@Override
-	public Mono<Store> addItemToInventory(String name, UUID id) {
+	public Mono<Store> addItemToInventory(String storename, UUID id) {
+		
 		
 		//Get store and item from Db
-		Mono<Store> storeMono = storeDao.findByName(name).flatMap(store ->{
+		Mono<Store> storeMono = storeDao.findByName(storename).flatMap(store ->{
 			List<UUID> newList = new ArrayList<UUID>(store.getInventory());
+			
+			
 			newList.add(id);
 			store.setInventory(newList);
 			return storeDao.save(store);
 		}).map(store -> store.getStore());
 		
 		//Get store's inventory
-		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(name))
+		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(storename))
 				.map(storeDto -> storeDto.getInventory())
 				.flatMap(listUuids -> Flux.fromIterable(listUuids))
-				.flatMap(uuid -> itemDao.findByUuid(id))
+				.flatMap(uuid -> itemDao.findByStorenameAndUuid(storename, id))
 				.map(itemDto -> itemDto.getItem())
 				.collectList();
 		
