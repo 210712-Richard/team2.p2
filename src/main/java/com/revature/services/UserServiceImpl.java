@@ -128,6 +128,7 @@ public class UserServiceImpl implements UserService {
 			User u = tuple.getT2();
 			List<Item> items = tuple.getT1();
 			u.setShoppingCart(items);
+			//userDao.save(new UserDTO(u));
 			return u;
 		});
 		

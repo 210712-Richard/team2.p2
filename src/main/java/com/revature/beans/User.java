@@ -34,8 +34,6 @@ public class User implements Serializable {
 		this.address = address;
 		this.currency = currency;
 		this.currentShop = currentShop;
-		this.shoppingCart = shoppingCart;
-		this.wishList = wishList;
 	}
 	
 	public User(String username, String firstName, String lastName, String email, String address, Double currency) {
