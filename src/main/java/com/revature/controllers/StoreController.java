@@ -34,33 +34,25 @@ public class StoreController {
 	private ItemService itemService;
 
 	// As a Store I can create an item
-	@PostMapping("{name}/inventory")
-	public Mono<ResponseEntity<Object>> createItem(@PathVariable("name") String name, @RequestBody Item item, WebSession session) {
+	@PostMapping("{name}/items")
+	public ResponseEntity<Mono<Item>> createItem(@PathVariable("name") String name, @RequestBody Item item, WebSession session) {
 
 		if (item == null) {
-			return Mono.just(ResponseEntity.status(404).build());
+			return ResponseEntity.status(404).build();
 		}
 			
 		Store loggedStore = (Store) session.getAttribute("loggedStore");
 		// Check if store is not empty
 		if (loggedStore == null) {
-			return Mono.just(ResponseEntity.status(403).build());
+			return ResponseEntity.status(403).build();
 		}
 		//Create Item
-		return Mono.just(storeService.createItem(UUID.randomUUID(), item.getName(), item.getStorename(), item.getPrice(),
-				item.getCategory())).map(i -> {
-					if (i == null) {
-						return ResponseEntity.status(409).build();
-					} else {
-						return ResponseEntity.ok(storeService.addItemToInventory(loggedStore.getName(), item.getUuid())
-								.map(s -> s.getName()));
-					}
-				});
+		return ResponseEntity.ok(storeService.createItem(item.getName(), item.getStorename(), item.getPrice(), item.getCategory()));
 	}
 
 	// As a Store I can add my item to my inventory
-	@PutMapping("{name}/inventory/{id}")
-	public ResponseEntity<Mono<List<Item>>> addToInventory(@PathVariable("name") String name, @PathVariable("id") String id, WebSession session) {
+	@PutMapping("{name}/inventory")
+	public ResponseEntity<Mono<List<Item>>> addToInventory(@PathVariable("name") String name, @RequestBody Item item, WebSession session) {
 
 		String loggedStore = (String) session.getAttribute("loggedStore");
 		if (loggedStore == null) {
@@ -70,7 +62,7 @@ public class StoreController {
 			return ResponseEntity.status(403).build();
 		}
 
-		return ResponseEntity.ok(storeService.addItemToInventory(name, UUID.fromString(id)).map(s -> s.getInventory()));
+		return ResponseEntity.ok(storeService.addItemToInventory(name, (item.getUuid())).map(s -> s.getInventory()));
 	}
 
 	// Listing items by Store

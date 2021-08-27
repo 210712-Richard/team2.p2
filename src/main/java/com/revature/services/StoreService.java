@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 public interface StoreService {
 	Flux<Item> listItems(String storeName);
 
-	Mono<Item> createItem(UUID id, String name, String storename, Double price, ItemType category);
+	Mono<Item> createItem(String name, String storename, Double price, ItemType category);
 	
 	void deleteItem(Item item);
 
