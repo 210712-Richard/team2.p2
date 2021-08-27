@@ -1,6 +1,9 @@
 package com.revature.services;
 
+import java.util.UUID;
+
 import com.revature.beans.Item;
+import com.revature.beans.ItemType;
 import com.revature.beans.Store;
 
 import reactor.core.publisher.Flux;
@@ -9,7 +12,7 @@ import reactor.core.publisher.Mono;
 public interface StoreService {
 	Flux<Item> listItems(String storeName);
 
-	Item createItem(Item item);
+	Mono<Item> createItem(UUID id, String name, String storename, Double price, ItemType category);
 	
 	void deleteItem(Item item);
 
@@ -19,6 +22,6 @@ public interface StoreService {
 	
 	Boolean checkAvailability(String name);
 	
-	Item addItemToInventory(Store store);
+	Mono<Store> addItemToInventory(String name, UUID id);
 	
 }
