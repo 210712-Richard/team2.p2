@@ -1,9 +1,6 @@
 package com.revature.services;
 
-import java.util.List;
 import java.util.UUID;
-
-import org.springframework.http.ResponseEntity;
 
 import com.revature.beans.Item;
 import com.revature.beans.User;
@@ -32,4 +29,5 @@ public interface UserService {
 
 	Mono<User> removeFromShoppingCart(String username, UUID itemId);
 
+	Mono<User> removeFromWishlist(String username, UUID itemId);
 }
