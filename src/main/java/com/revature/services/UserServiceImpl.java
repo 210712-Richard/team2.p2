@@ -189,11 +189,17 @@ public class UserServiceImpl implements UserService {
 			User userWish = tuple.getT2();
 			List<Item> items = tuple.getT1();
 			userWish.setWishList(items);
+			trying(userWish);
 			return userWish;
 		});
 		
 		return user;
 		
+	}
+	
+	public Mono<User> trying(User user) {
+		//return userDao.save(new UserDTO(user)).map(u -> u.getUser());
+		return null;
 	}
 
 }
