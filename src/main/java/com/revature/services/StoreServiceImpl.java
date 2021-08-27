@@ -68,7 +68,7 @@ public class StoreServiceImpl implements StoreService{
 		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(username))
 				.map(storeDto -> storeDto.getInventory())
 				.flatMap(listUuids -> Flux.fromIterable(listUuids))
-				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.flatMap(uuid -> itemDao.findByStorenameAndUuid(username, uuid))
 				.map(itemDto -> itemDto.getItem())
 				.collectList();
 		
