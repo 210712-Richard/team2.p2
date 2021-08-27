@@ -58,17 +58,17 @@ public class StoreServiceImpl implements StoreService{
 	}
 	
 	@Override
-	public Mono<Store> login(String username){
-		Mono<Store> storeMono = storeDao.findByName(username).map(storeDto -> storeDto.getStore());
+	public Mono<Store> login(String name){
+		Mono<Store> storeMono = storeDao.findByName(name).map(storeDto -> storeDto.getStore());
 		
-		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(username))
+		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(name))
 				.map(storeDto -> storeDto.getInventory())
 				.flatMap(listUuids -> Flux.fromIterable(listUuids))
-				.flatMap(uuid -> itemDao.findByStorenameAndUuid(username, uuid))
+				.flatMap(uuid -> itemDao.findByStorenameAndUuid(name, uuid))
 				.map(itemDto -> itemDto.getItem())
 				.collectList();
 		
-		Mono<Tuple2<List<Item>,Store>> itemsAndStore = inventory.zipWith(storeMono);
+		Mono<Tuple2<List<Item>, Store>> itemsAndStore = inventory.zipWith(storeMono);
 		Mono<Store> returnStore = itemsAndStore.map(tuple -> {
 			Store store = tuple.getT2();
 			List<Item> items = tuple.getT1();
@@ -87,10 +87,17 @@ public class StoreServiceImpl implements StoreService{
 		item.setStorename(storename);
 		item.setPrice(price);
 		item.setCategory(category);
+		
 		addItemToInventory(storename,id);
+		
 		return itemDao.save(new ItemDTO(item)).map(i -> i.getItem());
 	}
 
+	
+	// call addItem first
+	// inside of "get store and item from Db" lambda, call createItem and get item and item Id
+	// condense two controllers down to just one "addItem" controller method
+	
 	@Override
 	public Mono<Store> addItemToInventory(String name, UUID id) {
 		

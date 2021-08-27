@@ -3,7 +3,6 @@ package com.revature.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +11,6 @@ import com.revature.beans.Item;
 import com.revature.beans.User;
 import com.revature.data.ReactiveItemDao;
 import com.revature.data.ReactiveUserDao;
-import com.revature.dto.ItemDTO;
 import com.revature.dto.UserDTO;
 
 import reactor.core.publisher.Flux;

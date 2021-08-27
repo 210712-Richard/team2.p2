@@ -34,11 +34,13 @@ public class StoreController {
 	private ItemService itemService;
 
 	// As a Store I can create an item
-	@PostMapping
-	public Mono<ResponseEntity<Object>> createItem(@RequestBody Item item, WebSession session) {
+	@PostMapping("{name}/inventory")
+	public Mono<ResponseEntity<Object>> createItem(@PathVariable("name") String name, @RequestBody Item item, WebSession session) {
 
-		if (item == null)
+		if (item == null) {
 			return Mono.just(ResponseEntity.status(404).build());
+		}
+			
 		Store loggedStore = (Store) session.getAttribute("loggedStore");
 		// Check if store is not empty
 		if (loggedStore == null) {
