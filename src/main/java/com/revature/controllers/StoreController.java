@@ -90,8 +90,9 @@ public class StoreController {
 		if(loggedStore == null) {
 			return ResponseEntity.status(401).build();
 			}
-		
-		session.getAttributes().put("loggedStore", store);
+		if(session.getAttribute("loggedUser") == null ) {
+			session.getAttributes().put("loggedStore", store.getName());
+		}
 		return ResponseEntity.ok(loggedStore);
 	}
 	
