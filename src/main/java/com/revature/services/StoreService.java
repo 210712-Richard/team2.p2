@@ -1,5 +1,7 @@
 package com.revature.services;
 
+import java.util.UUID;
+
 import com.revature.beans.Item;
 import com.revature.beans.Store;
 
@@ -19,6 +21,6 @@ public interface StoreService {
 	
 	Boolean checkAvailability(String name);
 	
-	Item addItemToInventory(Store store);
+	Mono<Store> addItemToInventory(String name, UUID id);
 	
 }

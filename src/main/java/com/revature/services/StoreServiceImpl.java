@@ -2,6 +2,7 @@ package com.revature.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,8 @@ import reactor.util.function.Tuple2;
 
 @Service
 public class StoreServiceImpl implements StoreService{
-	@Autowired
+
 	private ReactiveItemDao itemDao;
-	@Autowired
 	private ReactiveStoreDao storeDao;
 	
 	@Autowired
@@ -85,9 +85,35 @@ public class StoreServiceImpl implements StoreService{
 	}
 
 	@Override
-	public Item addItemToInventory(Store store) {
+	public Mono<Store> addItemToInventory(String name, UUID id) {
 		//Obtain the object
 		//List<ItemDTO> items = itemDao.findByStorename(null);
-		return null;
+		Mono<Item> itemMono = itemDao.findByUuid(id).map(itemDto -> itemDto.getItem());
+		Mono<Store> storeMono = storeDao.findByName(name).map(storeDto -> storeDto.getStore());
+		
+		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(name))
+				.map(storeDto -> storeDto.getInventory())
+				.flatMap(listItems -> Flux.fromIterable(listItems))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		Mono<Tuple2<List<Item>,Item>> itemAndInventory = inventory.zipWith(itemMono);
+		Mono<List<Item>> invent = itemAndInventory.map(tuple -> {
+			Item item = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			items.add(item);
+			return items;
+		});
+		
+		Mono<Tuple2<List<Item>, Store>> storeAndInventory = invent.zipWith(storeMono);
+		Mono<Store> store = storeAndInventory.map(tuple -> {
+			Store str = tuple.getT2();
+			List<Item> items = tuple.getT1();
+			str.setInventory(items);
+			return str;
+		});
+		
+		return store;
 	}
 }

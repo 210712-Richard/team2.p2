@@ -86,10 +86,9 @@ public class StoreController {
 	public ResponseEntity<Mono<Store>> login(@RequestBody Store store, WebSession session){
 		
 		Mono<Store> loggedStore = storeService.login(store.getName());
-		
 		if(loggedStore == null) {
 			return ResponseEntity.status(401).build();
-			}
+		}
 		
 		session.getAttributes().put("loggedStore", store);
 		return ResponseEntity.ok(loggedStore);

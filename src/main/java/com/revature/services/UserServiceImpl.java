@@ -20,9 +20,7 @@ import reactor.util.function.Tuple2;
 @Service
 public class UserServiceImpl implements UserService {
 	
-	@Autowired
 	private ReactiveUserDao userDao;
-	@Autowired
 	private ReactiveItemDao itemDao;
 	
 	@Autowired
