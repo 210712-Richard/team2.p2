@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Mono<User> register(String username, String firstName, String lastName, String email, String address,
 			Double currency) {
-
+		
 		User user = new User();
 		user.setUsername(username);
 		user.setFirstName(firstName);
@@ -97,31 +97,27 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Mono<User> addToCart(String username, UUID itemId) {
 
-		Mono<User> userMono = userDao.findByUsername(username).map(userDto -> userDto.getUser());
-		Mono<Item> itemMono = itemDao.findByUuid(itemId).map(itemDto -> itemDto.getItem());
-
-		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
-				.map(userDto -> userDto.getShoppingCart()).flatMap(listUuids -> Flux.fromIterable(listUuids))
-				.flatMap(uuid -> itemDao.findByUuid(uuid)).map(itemDto -> itemDto.getItem()).collectList();
-
-		Mono<Tuple2<List<Item>, Item>> itemAndCart = shoppingCart.zipWith(itemMono);
-		Mono<List<Item>> cart = itemAndCart.map(tuple -> {
-			Item item = tuple.getT2();
-			List<Item> items = tuple.getT1();
-			items.add(item);
-			return items;
-		});
-
-		Mono<Tuple2<List<Item>, User>> userAndCart = cart.zipWith(userMono);
-		Mono<User> user = userAndCart.map(tuple -> {
-			User u = tuple.getT2();
-			List<Item> items = tuple.getT1();
-			u.setShoppingCart(items);
-			// userDao.save(new UserDTO(u));
-			return u;
-		});
-
-		return user;
+		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
+			List<UUID> newList = new ArrayList<UUID>(user.getShoppingCart());
+			newList.add(itemId);
+			user.setShoppingCart(newList);
+			return userDao.save(user);
+		}).map(user -> user.getUser());
+		
+		// get user's shoppingCart
+		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
+				.map(userDto -> userDto.getShoppingCart())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		return wishList.zipWith(userMono)
+				.map(tup -> {
+					User u = tup.getT2();
+					u.setWishList(tup.getT1());
+					return u;
+				});
 	}
 
 	@Override
