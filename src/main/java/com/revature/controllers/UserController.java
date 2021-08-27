@@ -94,7 +94,7 @@ public class UserController {
 		
 		UUID itemId = item.getUuid();
 		
-		return ResponseEntity.ok( userService.addToCart(username, itemId).map(u -> u.getShoppingCart()));
+		return ResponseEntity.ok(userService.addToCart(username, itemId).map(u -> u.getShoppingCart()));
 	}
 	
 	// As a User I can add items to my WishList

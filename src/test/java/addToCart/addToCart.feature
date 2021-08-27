@@ -9,4 +9,4 @@ And request { uuid : '42af36de-79a4-4a81-b640-16676f5a211e'}
 And cookie SESSION = signin.sessionCookie
 When method post
 Then status 200
-And match response contains [{uuid: '42af36de-79a4-4a81-b640-16676f5a211e', storename: '#notnull', price: '#notnull', name: '#notnull', category: '#ignore', picture: '#ignore'}]
+And match each response contains [{uuid: '42af36de-79a4-4a81-b640-16676f5a211e'}]
