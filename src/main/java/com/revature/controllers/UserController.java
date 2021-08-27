@@ -98,7 +98,6 @@ public class UserController {
 	}
 	
 	// As a User I can add items to my WishList
-	// As a User I can add items to my wishlist
 	@PostMapping("{username}/wishlist")
 	public ResponseEntity<Mono<List<Item>>> addToWishlist(@RequestBody Item item, @PathVariable("username") String username, WebSession session){
 		
@@ -131,7 +130,7 @@ public class UserController {
 	
 	// As a customer I can remove items from my ShoppingCart
 	@PostMapping("{username}/shoppingcart/garbage")
-	public ResponseEntity<Mono<List<Item>>> removeFromWishList(@RequestBody Item item, @PathVariable("username") String username, WebSession session) {
+	public ResponseEntity<Mono<List<Item>>> removeFromShoppingCart(@RequestBody Item item, @PathVariable("username") String username, WebSession session) {
 		String loggedUser = (String) session.getAttribute("loggedUser");
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
@@ -141,7 +140,7 @@ public class UserController {
 		}
 		
 		UUID itemId = item.getUuid();
-		return ResponseEntity.ok(userService.removeFromShoppingCart(username, itemId).map(u -> u.getWishList()));
+		return ResponseEntity.ok(userService.removeFromShoppingCart(username, itemId).map(u -> u.getShoppingCart()));
 	}
 
 	
@@ -169,7 +168,6 @@ public class UserController {
 		if(!loggedUser.equals(username)) {
 			return ResponseEntity.status(403).build();
 		}
-
 		UUID id = item.getUuid();
 		return ResponseEntity.ok(userService.removeFromWishlist(username, id).map(u -> u.getWishList()));
 	}
