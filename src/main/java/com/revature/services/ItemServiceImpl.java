@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.revature.beans.Item;
 import com.revature.beans.ItemType;
 import com.revature.data.ReactiveItemDao;
+import com.revature.data.ReactiveStoreDao;
 import com.revature.dto.ItemDTO;
 
 import reactor.core.publisher.Flux;
@@ -16,11 +18,13 @@ import reactor.core.publisher.Mono;
 @Service
 public class ItemServiceImpl implements ItemService {
 	private ReactiveItemDao itemDao;
+	private ReactiveStoreDao storeDao;
 	
 	@Autowired
-	public ItemServiceImpl(ReactiveItemDao itemDao) {
+	public ItemServiceImpl(ReactiveItemDao itemDao, ReactiveStoreDao storeDao) {
 		super();
 		this.itemDao = itemDao;
+		this.storeDao = storeDao;
 	}
 	
 	@Override
@@ -42,6 +46,16 @@ public class ItemServiceImpl implements ItemService {
 		item.setPrice(price);
 		item.setCategory(category);
 		return itemDao.save(new ItemDTO(item)).map(i -> i.getItem());
+	}
+
+	@Override
+	public Mono<Item> addCategoryToItem(Item item, String name) {
+		// get item and set item category
+		return itemDao.findByStorenameAndUuid(name, item.getUuid()).flatMap(itemEdit -> {
+			itemEdit.setCategory(item.getCategory());
+			return itemDao.save(itemEdit);
+		}).map(itemEdit -> itemEdit.getItem());
+		
 	}
 	
 }

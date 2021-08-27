@@ -144,39 +144,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Mono<User> addToWishlist(String username, UUID itemId) {
 
-//		// get user and item from db
-//		Mono<User> userMono = userDao.findByUsername(username).map(userDto -> userDto.getUser());
-//		Mono<Item> itemMono = itemDao.findByUuid(itemId).map(itemDto -> itemDto.getItem());
-//		
-//		// get user's wishlist
-//		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
-//				.map(userDto -> userDto.getWishList())
-//				.flatMap(listUuids -> Flux.fromIterable(listUuids))
-//				.flatMap(uuid -> itemDao.findByUuid(uuid))
-//				.map(itemDto -> itemDto.getItem())
-//				.collectList();
-//		
-//		// change mono of wishlist to actual list
-//		Mono<Tuple2<List<Item>,Item>> itemAndWishlist = wishList.zipWith(itemMono);
-//		Mono<List<Item>> wishlist = itemAndWishlist.map(tuple -> {
-//			Item item = tuple.getT2();
-//			List<Item> items = tuple.getT1();
-//			// add item to wishlist
-//			items.add(item);
-//			return items;
-//		});
-//		
-//		// change mono of user to actual user
-//		Mono<Tuple2<List<Item>,User>> userAndWishlist = wishlist.zipWith(userMono);
-//		Mono<User> user = userAndWishlist.map(tuple -> {
-//			User userWish = tuple.getT2();
-//			List<Item> items = tuple.getT1();
-//			userWish.setWishList(items);
-//			trying(userWish);
-//			return userWish;
-//		});
-
-		// get user and item from db
+		// get user and update wishlist
 		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
 			List<UUID> newList = new ArrayList<UUID>(user.getWishList());
 			newList.add(itemId);
@@ -184,7 +152,7 @@ public class UserServiceImpl implements UserService {
 			return userDao.save(user);
 		}).map(user -> user.getUser());
 		
-		// get user's wishlist
+		// get list
 		Mono<List<Item>> wishList = Flux.from(userDao.findByUsername(username))
 				.map(userDto -> userDto.getWishList())
 				.flatMap(listUuids -> Flux.fromIterable(listUuids))
@@ -192,11 +160,40 @@ public class UserServiceImpl implements UserService {
 				.map(itemDto -> itemDto.getItem())
 				.collectList();
 		
+		// return new list
 		return wishList.zipWith(userMono)
 				.map(tup -> {
 					User u = tup.getT2();
 					u.setWishList(tup.getT1());
 					return u;
+				});
+	}
+
+	@Override
+	public Mono<User> removeFromShoppingCart(String username, UUID itemId) {
+		// get user and update shoppingcart
+		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
+			List<UUID> cart = new ArrayList<UUID>(user.getShoppingCart());
+			// remove will remove first that matches
+			cart.remove(itemId);
+			user.setShoppingCart(cart);
+			return userDao.save(user);
+		}).map(user -> user.getUser());
+		
+		// get list
+		Mono<List<Item>> shoppingCart = Flux.from(userDao.findByUsername(username))
+				.map(userDto -> userDto.getShoppingCart())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(uuid))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		// return list
+		return shoppingCart.zipWith(userMono)
+				.map(tup -> {
+					User user = tup.getT2();
+					user.setShoppingCart(tup.getT1());
+					return user;
 				});
 	}
 	
