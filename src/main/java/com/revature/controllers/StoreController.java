@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,35 +33,43 @@ public class StoreController {
 	@Autowired
 	private ItemService itemService;
 
-	
-	// As a Seller I can create an item
-	/*
+	// As a Store I can create an item
 	@PostMapping
 	public Mono<ResponseEntity<Object>> createItem(@RequestBody Item item, WebSession session) {
 
-		if(item==null)
+		if (item == null)
 			return Mono.just(ResponseEntity.status(404).build());
 		Store loggedStore = (Store) session.getAttribute("loggedStore");
-		System.out.print(loggedStore.toString());
-		// Check if store is not empty 
+		// Check if store is not empty
 		if (loggedStore == null) {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
-		// If Seller, then proceed
-		
-		
-		
-		return Mono.just(itemService.createItem(UUID.randomUUID(), item.getName(), item.getStorename(), item.getPrice(),
+		//Create Item
+		return Mono.just(storeService.createItem(UUID.randomUUID(), item.getName(), item.getStorename(), item.getPrice(),
 				item.getCategory())).map(i -> {
 					if (i == null) {
 						return ResponseEntity.status(409).build();
 					} else {
-						Item newItem = storeService.addItemToInventory(loggedStore);
-						return ResponseEntity.ok(i);
+						return ResponseEntity.ok(storeService.addItemToInventory(loggedStore.getName(), item.getUuid())
+								.map(s -> s.getName()));
 					}
 				});
 	}
-	*/
+
+	// As a Store I can add my item to my inventory
+	@PutMapping("{name}/inventory/{id}")
+	public ResponseEntity<Mono<List<Item>>> addToInventory(@PathVariable("name") String name, @PathVariable("id") String id, WebSession session) {
+
+		String loggedStore = (String) session.getAttribute("loggedStore");
+		if (loggedStore == null) {
+			return ResponseEntity.status(401).build();
+		}
+		if (!loggedStore.equals(name)) {
+			return ResponseEntity.status(403).build();
+		}
+
+		return ResponseEntity.ok(storeService.addItemToInventory(name, UUID.fromString(id)).map(s -> s.getInventory()));
+	}
 
 	// Listing items by Store
 	@GetMapping(value = "{storename}/items", produces = MediaType.APPLICATION_NDJSON_VALUE)
@@ -68,43 +78,42 @@ public class StoreController {
 	}
 
 	/*
-	@DeleteMapping
-	public Mono<ResponseEntity<Object>> deleteItem(@RequestBody Item item, WebSession session) {
-		// Check for Seller authentication
-		User loggedUser = (User) session.getAttribute("loggedUser");
-		if (loggedUser == null || !UserType.SELLER.equals(loggedUser.getUserType())) {
-			return Mono.just(ResponseEntity.status(403).build());
-		}
-		// If Seller, then proceed to delete
-		storeService.deleteItem(item);
-		return Mono.just(ResponseEntity.status(201).build());
-	}
-	*/
-	
+	 * @DeleteMapping public Mono<ResponseEntity<Object>> deleteItem(@RequestBody
+	 * Item item, WebSession session) { // Check for Seller authentication User
+	 * loggedUser = (User) session.getAttribute("loggedUser"); if (loggedUser ==
+	 * null || !UserType.SELLER.equals(loggedUser.getUserType())) { return
+	 * Mono.just(ResponseEntity.status(403).build()); } // If Seller, then proceed
+	 * to delete storeService.deleteItem(item); return
+	 * Mono.just(ResponseEntity.status(201).build()); }
+	 */
+
 	// As a Seller I can login
 	@PostMapping
-	public ResponseEntity<Mono<Store>> login(@RequestBody Store store, WebSession session){
-		
+	public ResponseEntity<Mono<Store>> login(@RequestBody Store store, WebSession session) {
+
 		Mono<Store> loggedStore = storeService.login(store.getName());
-		
-		if(loggedStore == null) {
+
+		if (loggedStore == null) {
 			return ResponseEntity.status(401).build();
-			}
-		
-		session.getAttributes().put("loggedStore", store);
+		}
+		if (session.getAttribute("loggedStore") == null) {
+			session.getAttributes().put("loggedStore", store.getName());
+		}
+
+		// session.getAttributes().put("loggedStore", store.getName());
 		return ResponseEntity.ok(loggedStore);
 	}
-	
+
 	@DeleteMapping
-	public ResponseEntity<Void> logout(WebSession session){
+	public ResponseEntity<Void> logout(WebSession session) {
 		session.invalidate();
 		return ResponseEntity.noContent().build();
 	}
-	
+
 	// As a User I can create an account
-	@PostMapping(value="{name}", produces=MediaType.APPLICATION_JSON_VALUE)
-	public Mono<ResponseEntity<Object>> register(@RequestBody Store store, @PathVariable("name") String name){
-		
+	@PostMapping(value = "{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Mono<ResponseEntity<Object>> register(@RequestBody Store store, @PathVariable("name") String name) {
+
 		// check if name is available
 		if (Boolean.TRUE.equals(storeService.checkAvailability(name))) {
 			// register store
@@ -113,7 +122,7 @@ public class StoreController {
 			// if availability returns false
 			return Mono.just(ResponseEntity.status(400).contentType(MediaType.TEXT_HTML).build());
 		}
-		
+
 	}
-	
+
 }

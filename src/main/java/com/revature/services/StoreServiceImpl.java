@@ -2,11 +2,13 @@ package com.revature.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.beans.Item;
+import com.revature.beans.ItemType;
 import com.revature.beans.Store;
 import com.revature.data.ReactiveItemDao;
 import com.revature.data.ReactiveStoreDao;
@@ -33,12 +35,6 @@ public class StoreServiceImpl implements StoreService{
 	@Override
 	public Flux<Item> listItems(String storeName) {
 		return itemDao.findByStorename(storeName).map(dto -> dto.getItem());
-	}
-
-	@Override
-	public Item createItem(Item item) {
-		itemDao.save(new ItemDTO(item));
-		return item;
 	}
 
 	@Override
@@ -82,11 +78,43 @@ public class StoreServiceImpl implements StoreService{
 		
 		return returnStore;
 	}
+	
+	@Override
+	public Mono<Item> createItem(UUID id, String name, String storename, Double price, ItemType category) {
+		Item item = new Item();
+		item.setUuid(id);
+		item.setName(name);
+		item.setStorename(storename);
+		item.setPrice(price);
+		item.setCategory(category);
+		addItemToInventory(storename,id);
+		return itemDao.save(new ItemDTO(item)).map(i -> i.getItem());
+	}
 
 	@Override
-	public Item addItemToInventory(Store store) {
-		//Obtain the object
-		//List<ItemDTO> items = itemDao.findByStorename(null);
-		return null;
+	public Mono<Store> addItemToInventory(String name, UUID id) {
+		
+		//Get store and item from Db
+		Mono<Store> storeMono = storeDao.findByName(name).flatMap(store ->{
+			List<UUID> newList = new ArrayList<UUID>(store.getInventory());
+			newList.add(id);
+			store.setInventory(newList);
+			return storeDao.save(store);
+		}).map(store -> store.getStore());
+		
+		//Get store's inventory
+		Mono<List<Item>> inventory = Flux.from(storeDao.findByName(name))
+				.map(storeDto -> storeDto.getInventory())
+				.flatMap(listUuids -> Flux.fromIterable(listUuids))
+				.flatMap(uuid -> itemDao.findByUuid(id))
+				.map(itemDto -> itemDto.getItem())
+				.collectList();
+		
+		return inventory.zipWith(storeMono)
+				.map(tup -> {
+					Store s = tup.getT2();
+					s.setInventory(tup.getT1());
+					return s;
+				});
 	}
 }
