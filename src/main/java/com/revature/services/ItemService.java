@@ -1,6 +1,5 @@
 package com.revature.services;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.revature.beans.Item;

@@ -9,6 +9,6 @@ And header price = '620.0'
 And cookie SESSION = signin.sessionCookie
 When method get
 Then status 200
-And match each response contains {uuid: '#notnull', price: '#? _ <= 620.0'}
+And match each response contains { uuid: '#notnull', price: '#? _ <= 620.0' }
 
 
