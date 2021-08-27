@@ -18,7 +18,7 @@ public interface UserService {
 	Boolean checkAvailability(String newName);
 
 	void updateUser(User user);
-
+	
 	Flux<Item> viewShoppingCart(String username);
 
 	Flux<Item> viewWishList(String username);
