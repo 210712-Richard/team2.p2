@@ -66,7 +66,8 @@ public class StoreServiceImpl implements StoreService{
 				.flatMap(listUuids -> Flux.fromIterable(listUuids))
 				.flatMap(uuid -> itemDao.findByStorenameAndUuid(name, uuid))
 				.map(itemDto -> itemDto.getItem())
-				.collectList();
+				.collectList()
+				.onErrorReturn(new ArrayList<Item>());
 		
 		Mono<Tuple2<List<Item>, Store>> itemsAndStore = inventory.zipWith(storeMono);
 		
