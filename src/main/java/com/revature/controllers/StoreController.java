@@ -18,7 +18,6 @@ import org.springframework.web.server.WebSession;
 
 import com.revature.beans.Item;
 import com.revature.beans.Store;
-import com.revature.services.ItemService;
 import com.revature.services.StoreService;
 
 import reactor.core.publisher.Flux;
@@ -43,7 +42,7 @@ public class StoreController {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
 		
-		return Mono.just(storeService.createItem(item.getName(), item.getStorename(), item.getPrice(), item.getCategory())).map((g)-> {
+		return Mono.just(storeService.createItem(item.getName(), item.getStorename(), item.getPrice(), item.getCategory())).map(g-> {
 			if(g == null) {
 				return ResponseEntity.status(409).build();
 			} else {

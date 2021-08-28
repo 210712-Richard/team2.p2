@@ -67,7 +67,7 @@ public class StoreServiceImpl implements StoreService{
 				.flatMap(uuid -> itemDao.findByStorenameAndUuid(name, uuid))
 				.map(itemDto -> itemDto.getItem())
 				.collectList()
-				.onErrorReturn(new ArrayList<Item>());
+				.onErrorReturn(new ArrayList<>());
 		
 		Mono<Tuple2<List<Item>, Store>> itemsAndStore = inventory.zipWith(storeMono);
 		
@@ -93,10 +93,6 @@ public class StoreServiceImpl implements StoreService{
 		return itemDao.save(new ItemDTO(item)).map(i -> i.getItem());
 	}
 
-	
-	// call addItem first
-	// inside of "get store and item from Db" lambda, call createItem and get item and item Id
-	// condense two controllers down to just one "addItem" controller method
 	
 	@Override
 	public Mono<Store> addItemToInventory(String storename, UUID id) {
