@@ -52,14 +52,13 @@ public class UserServiceImpl implements UserService {
 				.map(itemDto -> itemDto.getItem()).collectList();
 
 		Mono<Tuple2<List<Item>, User>> both = wishList.zipWith(user);
-		Mono<User> returnUser = both.map(tuple -> {
+		return both.map(tuple -> {
 			User u2 = tuple.getT2();
 			List<Item> item = tuple.getT1();
 			u2.setWishList(item);
 			return u2;
 		});
 
-		return returnUser;
 	}
 
 	@Override
@@ -97,7 +96,7 @@ public class UserServiceImpl implements UserService {
 	public Mono<User> addToCart(String username, UUID itemId) {
 
 		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
-			List<UUID> newList = new ArrayList<UUID>(user.getShoppingCart());
+			List<UUID> newList = new ArrayList<>(user.getShoppingCart());
 			newList.add(itemId);
 			user.setShoppingCart(newList);
 			return userDao.save(user);
@@ -122,18 +121,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Flux<Item> viewShoppingCart(String username) {
 
-		Flux<Item> shoppingCart = Flux.from(userDao.findByUsername(username)).map(userDto -> userDto.getShoppingCart())
+		return Flux.from(userDao.findByUsername(username)).map(userDto -> userDto.getShoppingCart())
 				.flatMap(listUuids -> Flux.fromIterable(listUuids)).flatMap(uuid -> itemDao.findByUuid(uuid))
 				.map(itemDto -> itemDto.getItem());
-		return shoppingCart;
 	}
 
 	@Override
 	public Flux<Item> viewWishList(String username) {
-		Flux<Item> wishList = Flux.from(userDao.findByUsername(username)).map(userDto -> userDto.getWishList())
+		return Flux.from(userDao.findByUsername(username)).map(userDto -> userDto.getWishList())
 				.flatMap(listUuids -> Flux.fromIterable(listUuids)).flatMap(uuid -> itemDao.findByUuid(uuid))
 				.map(itemDto -> itemDto.getItem());
-		return wishList;
 	}
 
 	@Override
@@ -141,7 +138,7 @@ public class UserServiceImpl implements UserService {
 
 		// get user and update wishlist
 		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
-			List<UUID> newList = new ArrayList<UUID>(user.getWishList());
+			List<UUID> newList = new ArrayList<>(user.getWishList());
 			newList.add(itemId);
 			user.setWishList(newList);
 			return userDao.save(user);
@@ -168,7 +165,7 @@ public class UserServiceImpl implements UserService {
 	public Mono<User> removeFromShoppingCart(String username, UUID itemId) {
 		// get user and update shoppingcart
 		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
-			List<UUID> cart = new ArrayList<UUID>(user.getShoppingCart());
+			List<UUID> cart = new ArrayList<>(user.getShoppingCart());
 			// remove will remove first that matches
 			cart.remove(itemId);
 			user.setShoppingCart(cart);
@@ -192,21 +189,11 @@ public class UserServiceImpl implements UserService {
 				});
 	}
 	
-	//As a user, I can remove items from my wishlist
-//	@Override
-//	public Mono<User> removeFromWishlist(String username, UUID itemId) {		
-//		return userDao.findByUsername(username).flatMap(dto -> {
-//			List<UUID> list = dto.getWishList().stream().collect(Collectors.toList());
-//			list.removeIf(i -> i.equals(itemId));
-//			dto.setWishList(list);
-//			return userDao.save(dto);
-//		}).map(i -> i.getUser());
-//	}
 	@Override
 	public Mono<User> removeFromWishlist(String username, UUID itemId) {
 		//get user and update wishlist
 		Mono<User> userMono =  userDao.findByUsername(username).flatMap(user -> {
-			List<UUID> wishlist = new ArrayList<UUID>(user.getWishList());
+			List<UUID> wishlist = new ArrayList<>(user.getWishList());
 			//get index of item and remove it
 			wishlist.remove(itemId);
 			user.setWishList(wishlist);

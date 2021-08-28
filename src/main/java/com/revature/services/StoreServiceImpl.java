@@ -69,14 +69,14 @@ public class StoreServiceImpl implements StoreService{
 				.collectList();
 		
 		Mono<Tuple2<List<Item>, Store>> itemsAndStore = inventory.zipWith(storeMono);
-		Mono<Store> returnStore = itemsAndStore.map(tuple -> {
+		
+		return itemsAndStore.map(tuple -> {
 			Store store = tuple.getT2();
 			List<Item> items = tuple.getT1();
 			store.setInventory(items);
 			return store;
 		});
 		
-		return returnStore;
 	}
 	
 	@Override
@@ -103,7 +103,7 @@ public class StoreServiceImpl implements StoreService{
 		
 		//Get store and item from Db
 		Mono<Store> storeMono = storeDao.findByName(storename).flatMap(store ->{
-			List<UUID> newList = new ArrayList<UUID>(store.getInventory());
+			List<UUID> newList = new ArrayList<>(store.getInventory());
 			
 			
 			newList.add(id);

@@ -72,8 +72,7 @@ public class StoreDTO {
 	
 
 	public Store getStore() {
-		Store store = new Store(this.name, this.owner, this.currency);
-		return store;
+		return new Store(this.name, this.owner, this.currency);
 	}
 	
 	@Override

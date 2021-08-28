@@ -130,9 +130,9 @@ public class UserDTO {
 
 	
 	public User getUser() {
-		User u = new User(this.username, this.firstName, this.lastName, this.email, 
+		return new User(this.username, this.firstName, this.lastName, this.email, 
 				this.address, this.currency );
-		return u;
+		
 	}
 
 	@Override
