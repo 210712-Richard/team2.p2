@@ -58,7 +58,7 @@ public class ItemController {
 	// add category tags to an item
 	@PostMapping("{name}/tags")
 	public ResponseEntity<Mono<Item>> addCategoryToItem(@RequestBody Item item, @PathVariable("name") String name, WebSession session){
-		String loggedUser = (String) session.getAttribute("loggedUser");
+		String loggedUser = session.getAttribute("loggedUser");
 		if(loggedUser == null) {
 			return ResponseEntity.status(401).build();
 		}
