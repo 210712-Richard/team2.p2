@@ -1,6 +1,5 @@
 package com.revature.services;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,11 @@ import reactor.core.publisher.Mono;
 @Service
 public class ItemServiceImpl implements ItemService {
 	private ReactiveItemDao itemDao;
-	private ReactiveStoreDao storeDao;
 	
 	@Autowired
-	public ItemServiceImpl(ReactiveItemDao itemDao, ReactiveStoreDao storeDao) {
+	public ItemServiceImpl(ReactiveItemDao itemDao) {
 		super();
 		this.itemDao = itemDao;
-		this.storeDao = storeDao;
 	}
 	
 	@Override

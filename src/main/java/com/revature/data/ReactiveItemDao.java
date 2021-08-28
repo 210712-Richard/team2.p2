@@ -3,7 +3,6 @@ package com.revature.data;
 import java.util.UUID;
 
 import org.springframework.data.cassandra.repository.AllowFiltering;
-import org.springframework.data.cassandra.repository.Query;
 import org.springframework.data.cassandra.repository.ReactiveCassandraRepository;
 import org.springframework.stereotype.Repository;
 
