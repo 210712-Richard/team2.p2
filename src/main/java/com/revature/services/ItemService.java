@@ -1,7 +1,5 @@
 package com.revature.services;
 
-import java.util.UUID;
-
 import com.revature.beans.Item;
 import com.revature.beans.ItemType;
 import com.revature.dto.ItemDTO;
