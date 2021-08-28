@@ -29,24 +29,27 @@ import reactor.core.publisher.Mono;
 public class StoreController {
 	@Autowired
 	private StoreService storeService;
-	@Autowired
-	private ItemService itemService;
 
 	// As a Store I can create an item
 	@PostMapping("{name}/items")
-	public ResponseEntity<Mono<Item>> createItem(@PathVariable("name") String name, @RequestBody Item item, WebSession session) {
+	public Mono<ResponseEntity<Object>> createItem(@PathVariable("name") String name, @RequestBody Item item, WebSession session) {
 
 		if (item == null) {
-			return ResponseEntity.status(404).build();
+			return Mono.just(ResponseEntity.status(403).build());
 		}
-			
-		Store loggedStore = (Store) session.getAttribute("loggedStore");
-		// Check if store is not empty
-		if (loggedStore == null) {
-			return ResponseEntity.status(403).build();
+		String loggedStore = (String) session.getAttribute("loggedStore");
+		//Check if session not empty or the store name is the same as the item store name
+		if (loggedStore == null || !item.getStorename().equals(name)) {
+			return Mono.just(ResponseEntity.status(403).build());
 		}
-		//Create Item
-		return ResponseEntity.ok(storeService.createItem(item.getName(), item.getStorename(), item.getPrice(), item.getCategory()));
+		
+		return Mono.just(storeService.createItem(item.getName(), item.getStorename(), item.getPrice(), item.getCategory())).map((g)-> {
+			if(g == null) {
+				return ResponseEntity.status(409).build();
+			} else {
+				return ResponseEntity.ok(g);
+			}
+		});
 	}
 
 	// As a Store I can add my item to my inventory
