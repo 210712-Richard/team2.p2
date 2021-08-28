@@ -84,13 +84,16 @@ public class StoreController {
 	@PostMapping
 	public ResponseEntity<Mono<Store>> login(@RequestBody Store store, WebSession session) {
 
+		String name = store.getName();
+		if (store.getName() == null) {
+			return ResponseEntity.status(400).build();
+		}
+		
 		Mono<Store> loggedStore = storeService.login(store.getName());
 
-		if (loggedStore == null) {
-			return ResponseEntity.status(401).build();
-		}
+		
 		if (session.getAttribute("loggedStore") == null) {
-			session.getAttributes().put("loggedStore", store.getName());
+			session.getAttributes().put("loggedStore", name);
 		}
 
 		// session.getAttributes().put("loggedStore", store.getName());
