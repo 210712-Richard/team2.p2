@@ -38,11 +38,11 @@ public class StoreController {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
 		String loggedStore = (String) session.getAttribute("loggedStore");
-		if (loggedStore == null) {
+		//Check if session not empty or the store name is the same as the item store name
+		if (loggedStore == null || !item.getStorename().equals(name)) {
 			return Mono.just(ResponseEntity.status(403).build());
 		}
 		
-		// Check if store is not empty
 		return Mono.just(storeService.createItem(item.getName(), item.getStorename(), item.getPrice(), item.getCategory())).map((g)-> {
 			if(g == null) {
 				return ResponseEntity.status(409).build();
