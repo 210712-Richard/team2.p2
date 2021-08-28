@@ -35,9 +35,9 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Mono<Item> createItem(UUID id, String name, String storename, Double price, ItemType category) {
+	public Mono<Item> createItem(String name, String storename, Double price, ItemType category) {
 		Item item = new Item();
-		item.setUuid(id);
+		item.setUuid(UUID.randomUUID());
 		item.setName(name);
 		item.setStorename(storename);
 		item.setPrice(price);

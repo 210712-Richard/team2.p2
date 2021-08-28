@@ -14,7 +14,7 @@ public interface ItemService {
 	
 	Flux<ItemDTO> getItemsByPrice(Double price);
 	
-	Mono<Item> createItem(UUID id, String name, String storename, Double price, ItemType category);
+	Mono<Item> createItem(String name, String storename, Double price, ItemType category);
 
 	Mono<Item> addCategoryToItem(Item item, String name);
 }
