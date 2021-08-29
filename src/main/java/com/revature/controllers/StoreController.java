@@ -56,14 +56,14 @@ public class StoreController {
 	public ResponseEntity<Mono<List<Item>>> addToInventory(@PathVariable("name") String name, @RequestBody Item item, WebSession session) {
 
 		String loggedStore = (String) session.getAttribute("loggedStore");
-		if (loggedStore == null) {
+		if (loggedStore == null ) {
 			return ResponseEntity.status(401).build();
 		}
-		if (!loggedStore.equals(name)) {
+		if (!item.getStorename().equals(name)) {
 			return ResponseEntity.status(403).build();
 		}
 
-		return ResponseEntity.ok(storeService.addItemToInventory(name, (item.getUuid())).map(s -> s.getInventory()));
+		return ResponseEntity.ok(storeService.addItemToInventory(name, item.getUuid()).map(s -> s.getInventory()));
 	}
 
 	// Listing items by Store
