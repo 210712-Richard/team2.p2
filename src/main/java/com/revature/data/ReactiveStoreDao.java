@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 public interface ReactiveStoreDao extends ReactiveCassandraRepository<StoreDTO, String>{
 	Mono<StoreDTO> findByName(String name);
 	
-	@Query("update store set inventory = ?0 where username = ?1")
+	@Query("update store set inventory = ?0 where name = ?1")
 	Mono<StoreDTO> updateInventory(List<UUID> list, String name);
 
 }
