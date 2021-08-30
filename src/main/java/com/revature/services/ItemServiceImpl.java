@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-	private ReactiveItemDao itemDao;
+	ReactiveItemDao itemDao;
 	
 	@Autowired
 	public ItemServiceImpl(ReactiveItemDao itemDao) {
