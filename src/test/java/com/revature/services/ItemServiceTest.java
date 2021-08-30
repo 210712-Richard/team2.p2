@@ -54,12 +54,27 @@ public class ItemServiceTest {
 		ArgumentCaptor<ItemDTO> captor = ArgumentCaptor.forClass(ItemDTO.class);
 		Mockito.verify(service.itemDao).save(captor.capture());
 		
-		Item testItem = captor.getValue().map(dto -> dto.getItem());
+		Mono<Item> testItem =  captor.getValue().map(dto -> dto.getItem());
 		assertEquals(storeName, testItem.getStorename(), "Assert storename is the same");
 		assertEquals(name, testItem.getName(), "Assert name is the same");
 		
-		
+	}
+	
+	@Test
+	public void testGetAllItems() {
 		
 	}
+	
+	@Test
+	public void testGetItemsByPrice() {
+		
+	}
+	
+	@Test
+	public void testAddCategoryToItem() {
+		
+	}
+	
+	
 
 }
